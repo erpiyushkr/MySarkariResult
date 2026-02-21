@@ -63,3 +63,23 @@ In GitHub, go to **Settings > Secrets and variables > Actions** and add the vari
 1. Review this PR (`feature/global-social-automation`).
 2. Verify that GitHub Actions run successfully. Note that if no new files were pushed or if the previous commit is unavailable, detection might bypass sending gracefully.
 3. If everything is stable, it's safe to merge to `main`. Existing automated sitemap tasks remain entirely untouched and decoupled from this feature.
+
+## WhatsApp Forwarding Strategy
+
+Because WhatsApp Channels do not offer a public API, we use a **semi‑automated approach**:
+
+1. New posts are automatically detected and posted to **Telegram**.
+2. Telegram messages are carefully formatted to be **clean and preview‑friendly**.
+3. Channel administrators or users can **manually forward** the Telegram message to a WhatsApp Channel.
+4. The forwarded message retains its formatting and URL preview.
+
+**Why this works:**  
+- Telegram messages are plain text with a single emoji and line breaks – exactly what WhatsApp supports.
+- The URL preview in Telegram carries over when forwarded to WhatsApp (if the WhatsApp client generates a preview from the URL).
+- No API, no cost, and no maintenance.
+
+**Message format rationale:**  
+- `📢` catches attention without being spammy.
+- Title is prominent.
+- "View Details:" line clearly indicates the link.
+- Hashtags improve discoverability.

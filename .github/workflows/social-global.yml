@@ -50,3 +50,11 @@ jobs:
           TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
           TWITTER_ACCESS_SECRET: ${{ secrets.TWITTER_ACCESS_SECRET }}
         run: node twitter-notify.js
+
+      - name: Send LinkedIn notifications
+        if: success() && steps.detect.outputs.has_new == 'true'
+        working-directory: scripts/social
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_ORG_ID: ${{ secrets.LINKEDIN_ORG_ID }}
+        run: node linkedin-notify.js

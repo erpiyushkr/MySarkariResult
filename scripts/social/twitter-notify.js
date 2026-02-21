@@ -1,6 +1,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const { TwitterApi } = require('twitter-api-v2');
+const formatMessage = require('./format-message');
 
 const TEMP_FILE = '/tmp/new-posts.json';
 
@@ -12,7 +13,7 @@ const accessSecret = process.env.TWITTER_ACCESS_SECRET;
 
 async function sendTweet(message) {
     if (!apiKey || !apiSecret || !accessToken || !accessSecret) {
-        console.warn("Twitter secrets are missing. Skipping Twitter notification.");
+        console.warn("[Twitter] Skipping: TWITTER_API_KEY or other Twitter secrets missing");
         return;
     }
 
@@ -25,9 +26,9 @@ async function sendTweet(message) {
 
     try {
         const { data: createdTweet } = await client.v2.tweet(message);
-        console.log("Successfully sent Twitter notification:", createdTweet.id);
+        console.log("[Twitter] Success");
     } catch (e) {
-        console.error("Failed to make Twitter API call:", JSON.stringify(e));
+        console.error("[Twitter] Failed:", JSON.stringify(e));
     }
 }
 
@@ -46,10 +47,27 @@ async function run() {
         return;
     }
 
-    for (const post of posts) {
-        const message = `📢 New Update — MySarkariResult\n\n${post.title}\n\nView Details:\n${post.url}\n\n#MySarkariResult #GovtJobs`;
+    if (posts.length === 0) {
+        console.log("No new posts. Exiting.");
+        return;
+    }
 
-        console.log("Sending to Twitter:", post.title);
+    for (const post of posts) {
+        let message;
+        // Strict Twitter Truncation Algorithm
+        const fixedPart = formatMessage('', post.url);
+        const maxTotal = 280;
+        const reserved = fixedPart.length;
+        const maxTitle = maxTotal - reserved;
+
+        if (post.title.length <= maxTitle) {
+            message = formatMessage(post.title, post.url);
+        } else {
+            const truncatedTitle = post.title.slice(0, maxTitle - 1) + '…';
+            message = formatMessage(truncatedTitle, post.url);
+        }
+
+        console.log(`[Twitter] Posting: ${post.url}`);
         await sendTweet(message);
 
         // Wait a small amount to prevent rate limiting APIs

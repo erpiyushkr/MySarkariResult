@@ -1,5 +1,6 @@
 require('dotenv').config();
 const fs = require('fs');
+const formatMessage = require('./format-message');
 
 const TEMP_FILE = '/tmp/new-posts.json';
 
@@ -8,14 +9,14 @@ const TELEGRAM_CHANNEL_ID = process.env.TELEGRAM_CHANNEL_ID;
 
 async function sendTelegram(message) {
     if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHANNEL_ID) {
-        console.warn("Telegram secrets are missing. Skipping Telegram notification.");
+        console.warn("[Telegram] Skipping: TELEGRAM_BOT_TOKEN or TELEGRAM_CHANNEL_ID missing");
         return;
     }
 
     const payload = {
         chat_id: TELEGRAM_CHANNEL_ID,
         text: message,
-        disable_web_page_preview: false,
+        disable_web_page_preview: false
     };
 
     try {
@@ -29,12 +30,12 @@ async function sendTelegram(message) {
 
         if (!response.ok) {
             const errBody = await response.text();
-            console.error(`Telegram API err: ${response.status} ${response.statusText}`, errBody);
+            console.error(`[Telegram] Failed: ${response.status} ${response.statusText}`, errBody);
         } else {
-            console.log("Successfully sent Telegram notification.");
+            console.log("[Telegram] Success");
         }
     } catch (e) {
-        console.error("Failed to make Telegram API call:", e.message);
+        console.error("[Telegram] Failed:", e.message);
     }
 }
 
@@ -53,10 +54,15 @@ async function run() {
         return;
     }
 
-    for (const post of posts) {
-        const message = `📢 New Update — MySarkariResult\n\n${post.title}\n\nView Details:\n${post.url}\n\n#MySarkariResult #GovtJobs`;
+    if (posts.length === 0) {
+        console.log("No new posts. Exiting.");
+        return;
+    }
 
-        console.log("Sending to Telegram:", post.title);
+    for (const post of posts) {
+        const message = formatMessage(post.title, post.url);
+
+        console.log(`[Telegram] Posting: ${post.url}`);
         await sendTelegram(message);
 
         // Wait a small amount to prevent rate limiting
