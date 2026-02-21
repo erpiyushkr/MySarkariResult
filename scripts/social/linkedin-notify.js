@@ -1,6 +1,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const formatMessage = require('./format-message');
+const fetch = global.fetch || require('node-fetch');
 
 const TEMP_FILE = '/tmp/new-posts.json';
 
@@ -9,7 +10,7 @@ const LINKEDIN_ORG_ID = process.env.LINKEDIN_ORG_ID;
 
 async function sendLinkedIn(message) {
     if (!LINKEDIN_ACCESS_TOKEN || !LINKEDIN_ORG_ID) {
-        console.warn("[LinkedIn] Skipping: LINKEDIN_ACCESS_TOKEN or LINKEDIN_ORG_ID missing");
+        console.log("[LinkedIn] Skipping: missing secrets");
         return;
     }
 
@@ -51,35 +52,39 @@ async function sendLinkedIn(message) {
     }
 }
 
-async function run() {
-    if (!fs.existsSync(TEMP_FILE)) {
-        console.log("No new posts discovered (temp file missing). Exiting.");
-        return;
-    }
-
-    let posts = [];
+(async () => {
     try {
-        const data = fs.readFileSync(TEMP_FILE, 'utf8');
-        posts = JSON.parse(data);
+        if (!fs.existsSync(TEMP_FILE)) {
+            console.log('No new posts file');
+            process.exit(0);
+        }
+
+        let posts = [];
+        try {
+            posts = JSON.parse(fs.readFileSync(TEMP_FILE, 'utf8'));
+        } catch (e) {
+            console.error('Invalid JSON');
+            process.exit(0);
+        }
+
+        if (!posts.length) {
+            console.log('No new posts');
+            process.exit(0);
+        }
+
+        for (const post of posts) {
+            const message = formatMessage(post.title, post.url);
+
+            console.log(`[LinkedIn] Posting: ${post.url}`);
+            await sendLinkedIn(message);
+
+            // Wait a small amount to prevent rate limiting APIs
+            await new Promise(r => setTimeout(r, 1000));
+        }
+
+        process.exit(0);
     } catch (e) {
-        console.error("Failed to parse newly detected posts JSON:", e.message);
-        return;
+        console.error(e);
+        process.exit(0);
     }
-
-    if (posts.length === 0) {
-        console.log("No new posts. Exiting.");
-        return;
-    }
-
-    for (const post of posts) {
-        const message = formatMessage(post.title, post.url);
-
-        console.log(`[LinkedIn] Posting: ${post.url}`);
-        await sendLinkedIn(message);
-
-        // Wait a small amount to prevent rate limiting APIs
-        await new Promise(r => setTimeout(r, 1000));
-    }
-}
-
-run().catch(console.error);
+})();
