@@ -1,0 +1,28 @@
+/* syllabus.css */
+.syllabus-index {
+    background: var(--config-bg-main);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-xl);
+}
+
+.syllabus-index ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-sm);
+}
+
+.syllabus-section {
+    margin-bottom: var(--space-xxl);
+}
+
+.syllabus-topic {
+    background: var(--config-bg-card);
+    padding: var(--space-md);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-sm);
+    box-shadow: var(--shadow-sm);
+    border-left: 3px solid var(--config-primary);
+}

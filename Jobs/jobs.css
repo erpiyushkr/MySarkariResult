@@ -1,0 +1,267 @@
+/* jobs/jobs.css */
+/* Job-specific styles – builds on base.css */
+
+/* Job container (optional override) */
+.job-container {
+    max-width: 75rem;
+    /* 1200px */
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+}
+
+/* Job header with gradient */
+.job-header {
+    background: linear-gradient(135deg, var(--config-primary), #1a5fc5);
+    color: white;
+    padding: var(--space-xl);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-xl);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.job-header::before {
+    content: "";
+    position: absolute;
+    top: -3.125rem;
+    /* -50px */
+    right: -3.125rem;
+    /* -50px */
+    width: 12.5rem;
+    /* 200px */
+    height: 12.5rem;
+    /* 200px */
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.job-header h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    margin-bottom: var(--space-md);
+    line-height: 1.3;
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+.job-header .short-info {
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    opacity: 0.9;
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+/* Content boxes (white cards) */
+.content-box {
+    background: var(--config-bg-card);
+    border-radius: var(--radius-md);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.content-box:hover {
+    transform: translateY(-0.3125rem);
+    /* -5px */
+    box-shadow: var(--shadow-md);
+}
+
+.content-box h2 {
+    color: var(--config-primary);
+    font-family: var(--font-heading);
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    margin-bottom: var(--space-lg);
+    position: relative;
+    padding-bottom: var(--space-sm);
+}
+
+.content-box h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 3.75rem;
+    /* 60px */
+    height: 0.1875rem;
+    /* 3px */
+    background: var(--config-primary);
+}
+
+.content-box h3 {
+    color: var(--config-secondary);
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    margin: var(--space-lg) 0 var(--space-md);
+}
+
+/* Timeline grid */
+.timeline-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    gap: var(--space-lg);
+    margin: var(--space-xl) 0;
+}
+
+.timeline-card {
+    background: var(--config-bg-card);
+    padding: var(--space-lg);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    border-left: 0.25rem solid var(--config-primary);
+}
+
+.timeline-card h3 {
+    color: var(--config-primary);
+    margin-top: 0;
+    margin-bottom: var(--space-md);
+    font-size: clamp(1rem, 2vw, 1.2rem);
+}
+
+/* Info box */
+.info-box {
+    background: var(--config-bg-main);
+    padding: var(--space-lg);
+    border-left: 0.25rem solid var(--config-primary);
+    margin: var(--space-lg) 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.info-box h4 {
+    margin-bottom: var(--space-sm);
+    color: var(--config-primary);
+    font-size: 1.1rem;
+}
+
+/* FAQ section */
+.faq-section {
+    margin: var(--space-xl) 0;
+}
+
+.faq-item {
+    margin-bottom: var(--space-sm);
+    border: 1px solid var(--config-border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.faq-question {
+    padding: var(--space-md);
+    background: var(--config-bg-main);
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s ease;
+    font-size: clamp(0.9375rem, 2vw, 1rem);
+}
+
+.faq-question:hover {
+    background: #e9ecef;
+}
+
+.faq-question::after {
+    content: "+";
+    font-size: 1.25rem;
+    color: var(--config-primary);
+    transition: transform 0.3s ease;
+}
+
+.faq-item.active .faq-question::after {
+    content: "-";
+}
+
+.faq-answer {
+    padding: 0 var(--space-md);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    font-size: clamp(0.875rem, 2vw, 0.9375rem);
+}
+
+.faq-answer ul {
+    padding-left: var(--space-md);
+}
+
+.faq-item.active .faq-answer {
+    padding: var(--space-md);
+    max-height: 62.5rem;
+    /* 1000px – enough for long answers */
+}
+
+/* Job listing meta */
+.job-meta {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    font-size: var(--text-sm);
+    color: var(--config-text-muted);
+    background: var(--config-bg-main);
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+}
+
+.job-meta span {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.job-description {
+    margin: var(--space-md) 0;
+}
+
+.fee-table {
+    background: var(--config-bg-card);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Responsive adjustments for job components */
+@media (max-width: 48rem) {
+
+    /* up to 768px */
+    .job-header {
+        padding: var(--space-lg);
+    }
+
+    .content-box {
+        padding: var(--space-lg);
+    }
+
+    .timeline-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .button-group {
+        justify-content: center;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: var(--space-sm);
+    }
+}
+
+@media (max-width: 30rem) {
+
+    /* 480px */
+    .job-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .content-box h2 {
+        font-size: 1.3rem;
+    }
+
+    .faq-question {
+        padding: var(--space-sm);
+        font-size: 0.95rem;
+    }
+}

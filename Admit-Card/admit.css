@@ -1,0 +1,169 @@
+/* admission.css */
+/* Admission-specific styles – builds on base.css */
+
+/* Admission page container (optional) */
+.admission-container {
+    max-width: 75rem;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+}
+
+/* Admission header with gradient (different shade for variety) */
+.admission-header {
+    background: linear-gradient(135deg, var(--config-primary-dark), var(--config-secondary));
+    color: white;
+    padding: var(--space-xl);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-xl);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.admission-header::before {
+    content: "";
+    position: absolute;
+    top: -3.125rem;
+    /* -50px */
+    right: -3.125rem;
+    /* -50px */
+    width: 12.5rem;
+    /* 200px */
+    height: 12.5rem;
+    /* 200px */
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.admission-header h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    margin-bottom: var(--space-md);
+    line-height: 1.3;
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+.admission-header .short-info {
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    opacity: 0.9;
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+/* Admission timeline */
+.admission-timeline {
+    border-left: 2px solid var(--config-primary);
+    padding-left: var(--space-md);
+    margin: var(--space-xl) 0;
+}
+
+.timeline-step {
+    position: relative;
+    margin-bottom: var(--space-lg);
+}
+
+.timeline-step::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--space-md) * -1 - 6px);
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    background: var(--config-primary);
+    border-radius: 50%;
+}
+
+.timeline-date {
+    font-weight: 600;
+    color: var(--config-text-muted);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-xs);
+}
+
+.timeline-content {
+    background: var(--config-bg-card);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Admission info box */
+.admission-info {
+    background: var(--config-bg-main);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-xl);
+    border-left: 4px solid var(--config-primary);
+}
+
+/* Program cards for courses offered */
+.program-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    gap: var(--space-lg);
+    margin: var(--space-xl) 0;
+}
+
+.program-card {
+    background: var(--config-bg-card);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.program-card:hover {
+    transform: translateY(-0.3125rem);
+    /* -5px */
+    box-shadow: var(--shadow-md);
+}
+
+.program-card h3 {
+    color: var(--config-primary);
+    margin-bottom: var(--space-sm);
+    font-size: var(--text-lg);
+}
+
+.program-card .program-duration,
+.program-card .program-fee {
+    font-size: var(--text-sm);
+    color: var(--config-text-muted);
+    margin-bottom: var(--space-xs);
+}
+
+/* Fee structure table – uses base table styles, but we can add a wrapper if needed */
+.fee-structure {
+    margin: var(--space-xl) 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 48rem) {
+
+    /* up to 768px */
+    .admission-header {
+        padding: var(--space-lg);
+    }
+
+    .program-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 30rem) {
+
+    /* up to 480px */
+    .admission-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .timeline-step::before {
+        top: 3px;
+        width: 8px;
+        height: 8px;
+    }
+}

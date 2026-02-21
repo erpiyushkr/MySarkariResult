@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} | MySarkariResult</title>
+
+    <!-- SEO Meta -->
+    <meta name="description" content="{{description}}">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="revisit-after" content="7 days">
+    <meta name="content-language" content="en">
+    <meta name="rating" content="general">
+    <meta name="publisher" content="MySarkariResult">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{canonical}}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{{title}}">
+    <meta property="og:description" content="{{description}}">
+    <meta property="og:url" content="{{canonical}}">
+    <meta property="og:site_name" content="MySarkariResult">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{{title}}">
+    <meta name="twitter:description" content="{{description}}">
+
+    <!-- Favicon (adjust paths to your favicon location) -->
+    <link rel="icon" type="image/png" href="../assets/images/favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="../assets/images/favicon/favicon.svg">
+    <link rel="shortcut icon" href="../assets/images/favicon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/favicon/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-title" content="MySarkariResult">
+    <link rel="manifest" href="../assets/images/favicon/site.webmanifest">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="jobs.css">
+
+    <!-- Font Awesome (optional – remove if not used) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {{schema}}
+    </script>
+</head>
+
+<body class="wrapper">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div id="header-container"></div>
+
+    <main id="main-content" class="main-content">
+        <div class="container">
+            <nav aria-label="Breadcrumb" class="breadcrumb">
+                <ol>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="index.html">Jobs</a></li>
+                    <li aria-current="page">{{title}}</li>
+                </ol>
+            </nav>
+
+            <!-- AdSense Placeholder: Top Ad -->
+            <div class="ad-slot hide-print" aria-hidden="true">
+                Advertisement Placeholder
+            </div>
+
+            <article class="job-listing card">
+                <h1>{{title}}</h1>
+
+                <div class="job-meta">
+                    <span><i class="fas fa-user"></i> By MySarkariResult</span>
+                    <span><i class="fas fa-calendar-alt"></i> Last Updated: YYYY-MM-DD</span>
+                </div>
+
+                <div class="job-description">
+                    {{content}}
+                </div>
+            </article>
+
+            <!-- AdSense Placeholder: Middle Content Ad -->
+            <div class="ad-slot hide-print" aria-hidden="true">
+                Advertisement Placeholder
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+    <script src="../assets/js/components.js"></script>
+
+    <!-- Optional: small script for FAQ toggle and scroll animations -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // FAQ toggle
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const faqItem = question.parentElement;
+                    faqItem.classList.toggle('active');
+                    // Close others (optional)
+                    faqQuestions.forEach(q => {
+                        if (q !== question && q.parentElement.classList.contains('active')) {
+                            q.parentElement.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            // Scroll animation
+            const animateElements = document.querySelectorAll('.animate');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            animateElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

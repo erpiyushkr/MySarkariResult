@@ -1,6 +1,7 @@
 <!-- components/footer.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <style>
@@ -16,7 +17,7 @@
         footer {
             background: var(--bg-light);
             padding: 1rem;
-            border-top: 1px solid rgba(0,0,0,0.1);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
             font-family: var(--font-main);
         }
 
@@ -79,7 +80,7 @@
             text-align: center;
             padding: 1rem 0 0;
             margin-top: 1.5rem;
-            border-top: 1px solid rgba(0,0,0,0.1);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
             font-size: 0.75rem;
             color: var(--text-dark);
             font-family: var(--font-secondary);
@@ -111,22 +112,23 @@
             footer {
                 padding: 1.2rem 0.8rem;
             }
-            
+
             .footer-container {
                 grid-template-columns: 1fr;
                 gap: 1.2rem;
             }
-            
+
             .footer-section {
                 margin-bottom: 1rem;
             }
-            
+
             .footer-section h3 {
                 font-size: 1rem;
             }
         }
     </style>
 </head>
+
 <body>
     <footer>
         <div class="footer-container">
@@ -187,7 +189,7 @@
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
         // Back to top button
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', function () {
             var backToTop = document.getElementById('backToTop');
             if (window.pageYOffset > 300) {
                 backToTop.classList.add('visible');
@@ -196,7 +198,7 @@
             }
         });
 
-        document.getElementById('backToTop').addEventListener('click', function() {
+        document.getElementById('backToTop').addEventListener('click', function () {
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
@@ -204,4 +206,5 @@
         });
     </script>
 </body>
+
 </html>

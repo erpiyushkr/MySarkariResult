@@ -1,197 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-        
-    <!-- Homepage and main sections -->
-    <url>
-        <loc>https://mysarkariresult.in/</loc>
-        <lastmod>2025-05-06</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>1.0</priority>
-    </url>
-
-    <!--  Job Section -->
-    <url>
-        <loc>https://mysarkariresult.in/Jobs/jobs.html</loc>
-        <lastmod>2025-05-06</lastmod>
-        <changefreq>hourly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <!-- Results Section -->
-    <url>
-        <loc>https://mysarkariresult.in/Results/results.html</loc>
-        <lastmod>2025-05-06</lastmod>
-        <changefreq>hourly</changefreq>
-        <priority>0.9</priority>
-    </url>
-    
-    <!-- Admit Cards Section -->
-    <!-- <url>
-        <loc>https://mysarkariresult.in/admit-cards</loc>
-        <lastmod>2025-01-15</lastmod>
-        <changefreq>hourly</changefreq>
-        <priority>0.9</priority>
-    </url> -->
-    
-    <!-- Answer Keys Section -->
-    <!-- <url>
-        <loc>https://mysarkariresult.in/answer-keys</loc>
-        <lastmod>2025-01-14</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.8</priority>
-    </url> -->
-    
-    <!-- Syllabus Section -->
-    <!-- <url>
-        <loc>https://mysarkariresult.in/syllabus</loc>
-        <lastmod>2025-01-10</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url> -->
-    
-    <!-- Admissions Section -->
-    <!-- <url>
-        <loc>https://mysarkariresult.in/admissions</loc>
-        <lastmod>2025-01-14</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.8</priority>
-    </url> -->
-    
-    <!-- Exam Categories -->
-    <!-- <url>
-        <loc>https://mysarkariresult.in/exams/upsc</loc>
-        <lastmod>2025-01-10</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url> -->
-    <!-- <url>
-        <loc>https://mysarkariresult.in/exams/ssc</loc>
-        <lastmod>2025-01-10</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url> -->
-    <!-- <url>
-        <loc>https://mysarkariresult.in/exams/banking</loc>
-        <lastmod>2025-01-10</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url> -->
-    
-    <!-- Important Pages -->
-    <!-- <url>
-        <loc>https://mysarkariresult.in/about</loc>
-        <lastmod>2024-12-20</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.5</priority>
-    </url> -->
-    <!-- <url>
-        <loc>https://mysarkariresult.in/contact</loc>
-        <lastmod>2024-12-20</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.5</priority>
-    </url> -->
-    <!-- <url>
-        <loc>https://mysarkariresult.in/privacy-policy</loc>
-        <lastmod>2024-12-20</lastmod>
-        <changefreq>yearly</changefreq>
-        <priority>0.3</priority>
-    </url> -->
-    <!-- <url>
-        <loc>https://mysarkariresult.in/terms</loc>
-        <lastmod>2024-12-20</lastmod>
-        <changefreq>yearly</changefreq>
-        <priority>0.3</priority>
-    </url> -->
-
-    <!-- jobs -->
-    <!-- Bihar CHO Community Health Recruitment -->
-  <url>
-    <loc>https://mysarkariresult.in/Jobs/bihar-shs-community-health-officer-recruitment-2025.html</loc>
-    <lastmod>2025-05-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- ASRB NET -->
-  <url>
-    <loc>https://mysarkariresult.in/Jobs/asrb-net-ars-sms-sto-exam-2025.html</loc>
-    <lastmod>2025-05-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <!-- Union Bank SO Recruitment -->
-  <url>
-    <loc>https://mysarkariresult.in/Jobs/union-bank-so-recruitment-2025.html</loc>
-    <lastmod>2025-05-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Bihar SSC Laboratory Assistant Recruitment -->
-  <url>
-    <loc>https://mysarkariresult.in/Jobs/bihar-ssc-laboratory-assistant-recruitment-2025.html</loc>
-    <lastmod>2025-05-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- BIS Scientist B Online Form 2025 -->
-  <url>
-    <loc>https://mysarkariresult.in/Jobs/bis-scientist-b-recruitment-2025.html</loc>
-    <lastmod>2025-05-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- CSIR NBRI Lucknow Various Post Online Form 2025 -->
-  <url>
-    <loc>https://mysarkariresult.in/Jobs/csir-nbri-recruitment-2025.html</loc>
-    <lastmod>2025-05-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- UPSSSC PET 2025 Online Form -->
-  <url>
-    <loc>https://mysarkariresult.in/Jobs/upsssc-pet-recruitment-2025.html</loc>
-    <lastmod>2025-05-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- IDBI Bank Junior Assistant Manager Online Form 2025 -->
-  <url>
-    <loc>https://mysarkariresult.in/Jobs/idbi-jam-recruitment-2025.html</loc>
-    <lastmod>2025-05-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Rajasthan Police Constable Telecommunication Online Form -->
-  <url>
-    <loc>https://mysarkariresult.in/Jobs/rajasthan-police-telecom-recruitment-2025.html</loc>
-    <lastmod>2025-05-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-    
-
-    <!-- CISCE ICSE/ISC Result 2025 -->
-    <url>
-        <loc>https://mysarkariresult.in/Results/cisce-icse-isc-result-2025.html</loc>
-        <lastmod>2025-05-06</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <!-- CBSE Result 2025 -->
-    <url>
-        <loc>https://mysarkariresult.in/Results/cbse-result-2025.html</loc>
-        <lastmod>2025-05-06</lastmod> 
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-</urlset>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://mysarkariresult.in/sitemap-jobs.xml</loc>
+    <lastmod>2026-02-21T08:30:58.304Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://mysarkariresult.in/sitemap-results.xml</loc>
+    <lastmod>2026-02-21T08:30:58.362Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://mysarkariresult.in/sitemap-admit-card.xml</loc>
+    <lastmod>2026-02-21T08:30:58.390Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://mysarkariresult.in/sitemap-answer-key.xml</loc>
+    <lastmod>2026-02-21T08:30:58.421Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://mysarkariresult.in/sitemap-syllabus.xml</loc>
+    <lastmod>2026-02-21T08:30:58.452Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://mysarkariresult.in/sitemap-admission.xml</loc>
+    <lastmod>2026-02-21T08:30:58.467Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://mysarkariresult.in/sitemap-pages.xml</loc>
+    <lastmod>2026-02-21T08:30:58.551Z</lastmod>
+  </sitemap>
+</sitemapindex>

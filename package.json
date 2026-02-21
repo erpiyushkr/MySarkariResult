@@ -1,0 +1,14 @@
+{
+  "name": "mysarkariresult-tools",
+  "version": "1.0.0",
+  "description": "Automation scripts for MySarkariResult platform",
+  "main": "scripts/generate-sitemaps.js",
+  "scripts": {
+    "sitemap": "node scripts/generate-sitemaps.js"
+  },
+  "dependencies": {
+    "fs-extra": "^11.3.3",
+    "glob": "^13.0.6",
+    "xmlbuilder2": "^4.0.3"
+  }
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} | MySarkariResult</title>
+    <meta name="description" content="{{description}}">
+    <link rel="canonical" href="{{canonical}}">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="syllabus.css">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {{schema}}
+    </script>
+</head>
+
+<body class="wrapper">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div id="header-container"></div>
+
+    <main id="main-content" class="main-content container">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+            <ol>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../Syllabus/index.html">Syllabus</a></li>
+                <li aria-current="page">{{title}}</li>
+            </ol>
+        </nav>
+
+        <div class="ad-slot hide-print" aria-hidden="true">
+            Advertisement Placeholder
+        </div>
+
+        <article class="card">
+            <h1>{{title}}</h1>
+            <p class="text-muted">Detailed exam pattern and syllabus.</p>
+
+            <section class="syllabus-section mt-2">
+                {{content}}
+            </section>
+        </article>
+
+        <div class="ad-slot hide-print" aria-hidden="true">
+            Advertisement Placeholder
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+    <script src="../assets/js/components.js"></script>
+</body>
+
+</html>

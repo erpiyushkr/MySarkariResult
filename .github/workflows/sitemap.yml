@@ -1,0 +1,45 @@
+name: Update Sitemaps
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  generate-sitemaps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0 # Required to get git commit dates for files
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate sitemaps
+        env:
+          BASE_URL: ${{ vars.BASE_URL || 'https://mysarkariresult.in' }}
+        run: node scripts/generate-sitemaps.js
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add sitemap*.xml
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update sitemaps"
+          git push
+
+      - name: Ping search engines
+        if: success()
+        env:
+          SITEMAP_URL: ${{ vars.BASE_URL || 'https://mysarkariresult.in' }}/sitemap.xml
+        run: |
+          curl -s "https://www.google.com/ping?sitemap=${SITEMAP_URL}" || true
+          curl -s "https://www.bing.com/ping?sitemap=${SITEMAP_URL}" || true

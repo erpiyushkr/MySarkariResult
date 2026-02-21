@@ -1,0 +1,31 @@
+/* answer.css */
+.answer-key-box {
+    background: var(--config-bg-main);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg);
+}
+
+.set-link-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.set-link {
+    padding: var(--space-sm) var(--space-md);
+    background: white;
+    border: 1px solid var(--config-border);
+    border-radius: var(--radius-sm);
+    font-weight: bold;
+    color: var(--config-primary);
+    transition: all 0.2s;
+}
+
+.set-link:hover {
+    background: var(--config-primary);
+    color: white;
+    border-color: var(--config-primary);
+    text-decoration: none;
+}

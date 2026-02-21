@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <!-- CISCE ICSE/ISC Result 2025 -->
-    <url>
-        <loc>https://mysarkariresult.in/Results/cisce-icse-isc-result-2025.html</loc>
-        <lastmod>2025-05-08</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <!-- CBSE Result 2025 -->
-    <url>
-        <loc>https://mysarkariresult.in/Results/cbse-result-2025.html</loc>
-        <lastmod>2025-05-08</lastmod> 
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
+  <url>
+    <loc>https://mysarkariresult.in/Results/cbse-result-2025.html</loc>
+    <lastmod>2025-05-08T14:19:16+05:30</lastmod>
+  </url>
+  <url>
+    <loc>https://mysarkariresult.in/Results/cisce-icse-isc-result-2025.html</loc>
+    <lastmod>2025-05-08T14:19:16+05:30</lastmod>
+  </url>
+  <url>
+    <loc>https://mysarkariresult.in/Results/results.html</loc>
+    <lastmod>2025-05-06T07:57:25+05:30</lastmod>
+  </url>
+  <url>
+    <loc>https://mysarkariresult.in/Results/template.html</loc>
+    <lastmod>2026-02-21T08:26:01.549Z</lastmod>
+  </url>
 </urlset>

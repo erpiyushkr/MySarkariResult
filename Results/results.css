@@ -1,0 +1,35 @@
+/* results.css */
+.results-header {
+    background-color: var(--config-bg-card);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--config-primary);
+    margin-bottom: var(--space-xl);
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-md);
+}
+
+.result-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.result-status {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-sm);
+    background-color: #10b981;
+    color: #fff;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: bold;
+    margin-bottom: var(--space-sm);
+}
+
+.result-content {
+    margin: var(--space-lg) 0;
+}

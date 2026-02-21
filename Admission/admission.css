@@ -1,0 +1,36 @@
+/* admission.css */
+.admission-timeline {
+    border-left: 2px solid var(--config-primary);
+    padding-left: var(--space-md);
+    margin: var(--space-xl) 0;
+}
+
+.timeline-step {
+    position: relative;
+    margin-bottom: var(--space-lg);
+}
+
+.timeline-step::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--space-md) * -1 - 6px);
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    background: var(--config-primary);
+    border-radius: 50%;
+}
+
+.timeline-date {
+    font-weight: 600;
+    color: var(--config-text-muted);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-xs);
+}
+
+.admission-info {
+    background: var(--config-bg-main);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-xl);
+}
