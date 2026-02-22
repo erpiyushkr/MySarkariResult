@@ -1,0 +1,13 @@
+{
+    "name": "mysarkariresult-social-automation",
+    "version": "1.0.0",
+    "description": "Global social media automation for MySarkariResult.",
+    "main": "detect-new-post.js",
+    "scripts": {
+        "test": "node detect-new-post.js"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.5",
+        "twitter-api-v2": "^1.19.0"
+    }
+}
