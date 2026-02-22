@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -32,6 +32,11 @@ jobs:
           GITHUB_PREV_SHA: ${{ github.event.before }}
           GITHUB_CURR_SHA: ${{ github.sha }}
         run: node detect-new-post.js
+
+      - name: Update JSON indexes
+        if: success() && steps.detect.outputs.has_new == 'true'
+        working-directory: ${{ github.workspace }}
+        run: node scripts/update-json-index.js
 
       - name: Send Telegram notifications
         if: success() && steps.detect.outputs.has_new == 'true'
