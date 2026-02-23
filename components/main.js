@@ -1,3 +1,5 @@
+// components/main.js
+
 // Initialize Mobile Menu
 function initializeMobileMenu() {
     const menuToggle = document.getElementById('msr-unique-toggle');
@@ -22,13 +24,7 @@ function initializeMobileMenu() {
             });
         });
 
-        // Close Menu on Scroll/Resize
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('./header.html');
-            header.style.background = window.scrollY > 10 ? 'var(--primary-dark)' : 'var(--primary)';
-            header.style.boxShadow = window.scrollY > 10 ? '0 4px 12px rgba(0,0,0,0.15)' : 'var(--shadow-md)';
-        });
-
+        // Close Menu on Resize (when switching to desktop)
         window.addEventListener('resize', () => {
             if (window.innerWidth > 768) {
                 nav.classList.remove('active');
@@ -36,11 +32,40 @@ function initializeMobileMenu() {
                 document.body.style.overflow = '';
             }
         });
+
+        // Scroll handler removed – no dynamic header style changes (prevents layout thrash)
     }
 }
 
+// FAQ Toggle (ensures smooth interaction)
+function initializeFAQ() {
+    // Prevent double-initialization
+    if (document._msr_faq_initialized) return;
+    document._msr_faq_initialized = true;
+
+    // Use event delegation to avoid multiple listeners and to support dynamic content
+    document.addEventListener('click', (e) => {
+        const question = e.target.closest && e.target.closest('.faq-question');
+        if (!question) return;
+        const faqItem = question.closest('.faq-item');
+        if (!faqItem) return;
+
+        faqItem.classList.toggle('active');
+        // Close other items (accordion behaviour) — keep interface compact
+        document.querySelectorAll('.faq-item').forEach(item => {
+            if (item !== faqItem) item.classList.remove('active');
+        });
+    });
+}
+
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', initializeMobileMenu);
+document.addEventListener('DOMContentLoaded', () => {
+    initializeMobileMenu();
+    initializeFAQ();
+});
 
 // Re-initialize after dynamic content load (if needed)
-document.addEventListener('contentLoaded', initializeMobileMenu);
+document.addEventListener('contentLoaded', () => {
+    initializeMobileMenu();
+    initializeFAQ();
+});

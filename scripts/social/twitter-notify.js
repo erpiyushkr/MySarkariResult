@@ -1,9 +1,9 @@
-try { require('dotenv').config(); } catch (e) { /* dotenv is optional in this runtime */ }
+try { require('dotenv').config(); } catch (e) { /* dotenv optional */ }
 const fs = require('fs');
+const crypto = require('crypto');
 const fetch = global.fetch;
 const formatMessage = require('./format-message');
-// lazy-require twitter library so missing dev deps don't crash local runs
-let TwitterApi;
+const ledger = require('./social-ledger');
 
 const POSTS_FILE = '/tmp/new-posts.json';
 
@@ -12,43 +12,79 @@ const apiSecret = process.env.TWITTER_API_SECRET;
 const accessToken = process.env.TWITTER_ACCESS_TOKEN;
 const accessSecret = process.env.TWITTER_ACCESS_SECRET;
 
-// Platform-specific send function
-async function sendNotification(message) {
+function percentEncode(str) {
+    return encodeURIComponent(str)
+        .replace(/[!'()*]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
+}
+
+function generateNonce(length = 32) {
+    return crypto.randomBytes(length).toString('base64').replace(/[^a-zA-Z0-9]/g, '').slice(0, length);
+}
+
+function hmacSha1Base64(key, baseString) {
+    return crypto.createHmac('sha1', key).update(baseString).digest('base64');
+}
+
+async function postStatus(status) {
     if (!apiKey || !apiSecret || !accessToken || !accessSecret) {
         console.log('[Twitter] Skipping: missing secrets');
-        return;
+        return { ok: false, skipped: true };
     }
 
-    try {
-        TwitterApi = TwitterApi || require('twitter-api-v2').TwitterApi;
-    } catch (e) {
-        console.log('[Twitter] twitter-api-v2 not installed, skipping');
-        return;
-    }
+    const url = 'https://api.twitter.com/1.1/statuses/update.json';
 
-    const client = new TwitterApi({
-        appKey: apiKey,
-        appSecret: apiSecret,
-        accessToken: accessToken,
-        accessSecret: accessSecret,
-    });
+    const oauth = {
+        oauth_consumer_key: apiKey,
+        oauth_nonce: generateNonce(16),
+        oauth_signature_method: 'HMAC-SHA1',
+        oauth_timestamp: Math.floor(Date.now() / 1000).toString(),
+        oauth_token: accessToken,
+        oauth_version: '1.0'
+    };
+
+    // Parameters include OAuth params and the POST body param 'status'
+    const params = Object.assign({}, oauth, { status });
+
+    // Create parameter string (sorted by encoded key)
+    const paramPairs = Object.keys(params).sort().map(k => `${percentEncode(k)}=${percentEncode(params[k])}`);
+    const paramString = paramPairs.join('&');
+
+    const baseString = `POST&${percentEncode(url)}&${percentEncode(paramString)}`;
+    const signingKey = `${percentEncode(apiSecret)}&${percentEncode(accessSecret)}`;
+    const signature = hmacSha1Base64(signingKey, baseString);
+
+    const authHeader = 'OAuth ' + Object.keys(oauth).map(k => `${percentEncode(k)}="${percentEncode(oauth[k])}"`).join(', ') + `, oauth_signature="${percentEncode(signature)}"`;
+
+    const body = `status=${percentEncode(status)}`;
 
     try {
-        await client.v2.tweet(message);
+        const resp = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Authorization: authHeader,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body
+        });
+
+        const text = await resp.text();
+        if (!resp.ok) {
+            return { ok: false, status: resp.status, body: text };
+        }
+
+        return { ok: true, status: resp.status, body: text };
     } catch (e) {
-        throw new Error(typeof e === 'object' ? JSON.stringify(e) : String(e));
+        return { ok: false, error: e && e.message ? e.message : String(e) };
     }
 }
 
 (async () => {
     try {
-        // 1. Check if posts file exists
         if (!fs.existsSync(POSTS_FILE)) {
             console.log('No new posts file');
             process.exit(0);
         }
 
-        // 2. Read and parse posts safely
         let posts = [];
         try {
             posts = JSON.parse(fs.readFileSync(POSTS_FILE, 'utf8'));
@@ -62,35 +98,50 @@ async function sendNotification(message) {
             process.exit(0);
         }
 
-        // 3. For each post, send notification
+        // Dedupe by URL within this run
+        const seen = new Set();
+
         for (const post of posts) {
             const { title, url } = post;
-            let message;
+            if (!url) continue;
+            if (seen.has(url)) {
+                console.log(`[Twitter] Skipping duplicate URL in payload: ${url}`);
+                continue;
+            }
+            // Cross-run ledger skip
+            try {
+                if (ledger.isPosted(url, 'twitter')) {
+                    console.log('[Twitter] Skipping (already posted)');
+                    continue;
+                }
+            } catch (e) {
+                // ignore ledger errors
+            }
+            seen.add(url);
 
-            // Strict Twitter Truncation Algorithm
+            // Build message (simple truncation to 280 chars)
             const fixedPart = formatMessage('', url);
             const maxTotal = 280;
             const reserved = fixedPart.length;
-            const maxTitle = maxTotal - reserved;
+            const maxTitle = Math.max(0, maxTotal - reserved);
+            let finalTitle = (title || '').toString();
+            if (finalTitle.length > maxTitle) finalTitle = finalTitle.slice(0, maxTitle - 1) + '…';
+            const message = formatMessage(finalTitle, url);
 
-            if ((title || '').length <= maxTitle) {
-                message = formatMessage(title || '', url);
-            } else {
-                const truncatedTitle = (title || '').slice(0, maxTitle - 1) + '…';
-                message = formatMessage(truncatedTitle, url);
-            }
-
-            // 4. Platform-specific sending with try/catch
             try {
                 console.log(`[Twitter] Posting: ${url}`);
-                await sendNotification(message);
-                console.log('[Twitter] Success');
+                const res = await postStatus(message);
+                if (res.ok) {
+                    console.log('[Twitter] Success');
+                    try { ledger.markPosted(url, 'twitter'); } catch (e) { /* ignore */ }
+                } else {
+                    console.error('[Twitter] Failed:', res.status || '', res.body || res.error || '');
+                }
             } catch (err) {
-                console.error('[Twitter] Failed:', err && err.message ? err.message : String(err));
+                console.error('[Twitter] Exception:', err && err.message ? err.message : String(err));
             }
 
-            // Wait a small amount to prevent rate limiting APIs
-            await new Promise((r) => setTimeout(r, 1000));
+            await new Promise(r => setTimeout(r, 1000));
         }
 
         process.exit(0);

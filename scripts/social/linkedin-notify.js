@@ -1,6 +1,7 @@
 try { require('dotenv').config(); } catch (e) { /* dotenv is optional in this runtime */ }
 const fs = require('fs');
 const formatMessage = require('./format-message');
+const ledger = require('./social-ledger');
 const fetch = global.fetch;
 
 const POSTS_FILE = '/tmp/new-posts.json';
@@ -74,11 +75,22 @@ async function sendNotification(message) {
             const { title, url } = post;
             const message = formatMessage(title, url);
 
+            // Skip if already posted
+            try {
+                if (ledger.isPosted(url, 'linkedin')) {
+                    console.log('[LinkedIn] Skipping (already posted)');
+                    continue;
+                }
+            } catch (e) {
+                // ignore ledger errors
+            }
+
             // 4. Platform-specific sending with try/catch
             try {
                 console.log(`[LinkedIn] Posting: ${url}`);
                 await sendNotification(message);
                 console.log('[LinkedIn] Success');
+                try { ledger.markPosted(url, 'linkedin'); } catch (e) { /* ignore */ }
             } catch (err) {
                 console.error('[LinkedIn] Error:', err && err.message ? err.message : String(err));
             }

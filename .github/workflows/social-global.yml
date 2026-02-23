@@ -38,28 +38,44 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: node scripts/update-json-index.js
 
-      - name: Send Telegram notifications
+      - name: Inject Google News meta tags
         if: success() && steps.detect.outputs.has_new == 'true'
-        working-directory: scripts/social
+        working-directory: ${{ github.workspace }}
+        run: node scripts/add-meta-tags.js
+
+      - name: Update sitemaps
+        if: success() && steps.detect.outputs.has_new == 'true'
+        working-directory: ${{ github.workspace }}
+        run: node scripts/generate-sitemaps.js
+
+      - name: Update RSS feed
+        if: success() && steps.detect.outputs.has_new == 'true'
+        working-directory: ${{ github.workspace }}
+        run: node scripts/update-rss.js
+
+      - name: Commit generated files (indexes, sitemap, rss)
+        if: success() && steps.detect.outputs.has_new == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/data/*.json assets/data/social-posts.json sitemap*.xml rss.xml || true
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore(automation): update indexes/sitemap/rss for new posts"
+            git push
+          fi
+
+      - name: Run unified notifier
+        if: success() && steps.detect.outputs.has_new == 'true'
+        working-directory: ${{ github.workspace }}
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
-        run: node telegram-notify.js
-
-      - name: Send Twitter notifications
-        if: success() && steps.detect.outputs.has_new == 'true'
-        working-directory: scripts/social
-        env:
           TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
           TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
           TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
           TWITTER_ACCESS_SECRET: ${{ secrets.TWITTER_ACCESS_SECRET }}
-        run: node twitter-notify.js
-
-      - name: Send LinkedIn notifications
-        if: success() && steps.detect.outputs.has_new == 'true'
-        working-directory: scripts/social
-        env:
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           LINKEDIN_ORG_ID: ${{ secrets.LINKEDIN_ORG_ID }}
-        run: node linkedin-notify.js
+        run: node scripts/notify-all.js

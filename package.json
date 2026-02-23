@@ -4,7 +4,8 @@
   "description": "Automation scripts for MySarkariResult platform",
   "main": "scripts/generate-sitemaps.js",
   "scripts": {
-    "sitemap": "node scripts/generate-sitemaps.js"
+    "sitemap": "node scripts/generate-sitemaps.js",
+    "migrate-ledger": "node scripts/migrate-ledger.js"
   },
   "dependencies": {
     "fs-extra": "^11.3.3",

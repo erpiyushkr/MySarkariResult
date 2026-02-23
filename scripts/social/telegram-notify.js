@@ -2,6 +2,7 @@ try { require('dotenv').config(); } catch (e) { /* dotenv is optional in this ru
 const fs = require('fs');
 const fetch = global.fetch;
 const formatMessage = require('./format-message');
+const ledger = require('./social-ledger');
 
 const POSTS_FILE = '/tmp/new-posts.json';
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
@@ -61,11 +62,22 @@ async function sendNotification(message) {
             const { title, url } = post;
             const message = formatMessage(title, url);
 
+            // Skip if already posted (cross-run ledger)
+            try {
+                if (ledger.isPosted(url, 'telegram')) {
+                    console.log('[Telegram] Skipping (already posted)');
+                    continue;
+                }
+            } catch (e) {
+                // ignore ledger errors — continue to attempt post
+            }
+
             // 4. Platform-specific sending with try/catch
             try {
                 console.log(`[Telegram] Posting: ${url}`);
                 await sendNotification(message);
                 console.log('[Telegram] Success');
+                try { ledger.markPosted(url, 'telegram'); } catch (e) { /* ignore */ }
             } catch (err) {
                 console.error('[Telegram] Error:', err && err.message ? err.message : String(err));
             }

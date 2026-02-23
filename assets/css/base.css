@@ -16,43 +16,26 @@
     --font-main: 'Inter', system-ui, -apple-system, sans-serif;
     --font-heading: 'Poppins', system-ui, -apple-system, sans-serif;
     --text-base-size: 1rem;
-    /* 16px default */
     --text-xs: 0.75rem;
-    /* 12px */
     --text-sm: 0.875rem;
-    /* 14px */
     --text-md: 1rem;
-    /* 16px */
     --text-lg: 1.125rem;
-    /* 18px */
     --text-xl: clamp(1.25rem, 2vw + 1rem, 1.5rem);
-    /* 20–24px */
     --text-xxl: clamp(1.5rem, 3vw + 1rem, 2rem);
-    /* 24–32px */
 
-    /* Spacing */
+    /* Spacing – tighter Sarkari style */
     --space-xs: 0.25rem;
-    /* 4px */
-    --space-sm: 0.5rem;
-    /* 8px */
-    --space-md: 1rem;
-    /* 16px */
-    --space-lg: 1.5rem;
-    /* 24px */
-    --space-xl: 2rem;
-    /* 32px */
-    --space-xxl: 3rem;
-    /* 48px */
+    --space-sm: 0.375rem;
+    --space-md: 0.5rem;
+    --space-lg: 0.75rem;
+    --space-xl: 1rem;
+    --space-xxl: 1.5rem;
 
     /* Layout */
     --container-max: 80rem;
-    /* 1280px */
     --radius-sm: 0.25rem;
-    /* 4px */
     --radius-md: 0.5rem;
-    /* 8px */
     --radius-lg: 1rem;
-    /* 16px */
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
     --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -252,7 +235,6 @@ table {
     width: 100%;
     border-collapse: collapse;
     min-width: 600px;
-    /* forces horizontal scroll on narrow screens */
 }
 
 th,
@@ -276,7 +258,7 @@ tr:hover td {
     background-color: #f1f5f9;
 }
 
-/* Author Info (for articles) */
+/* Author Info */
 .author-info {
     display: flex;
     align-items: center;
@@ -336,11 +318,7 @@ tr:hover td {
     margin-bottom: var(--space-md);
 }
 
-.hide-print {
-    /* used with print media query */
-}
-
-/* Animation (scroll effects) */
+/* Animation */
 .animate {
     opacity: 0;
     transform: translateY(20px);
@@ -368,63 +346,111 @@ tr:hover td {
     transition-delay: 0.4s;
 }
 
-/* Header & Nav */
-#header-container {
-    min-height: 72px;
-    width: 100%;
+/* Header and footer are provided by components/header.html and components/footer.html
+   and are intentionally NOT styled by the global base.css to preserve their internal
+   styles. Any header/footer specific rules live in their component files. */
+
+/* ========== FAQ SECTION (global, supports both with and without inner wrapper) ========== */
+.faq-section {
+    margin: var(--space-xl) 0;
 }
 
-#footer-container {
-    min-height: 250px;
-    width: 100%;
+.faq-item {
+    margin-bottom: var(--space-sm);
+    border: 1px solid var(--config-border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
 }
 
-.site-header {
-    background-color: var(--config-primary);
-    color: #fff;
-    box-shadow: var(--shadow-md);
-    position: relative;
-    z-index: 10;
-}
-
-.site-header .container {
+.faq-question {
+    padding: var(--space-md);
+    background: var(--config-bg-main);
+    cursor: pointer;
+    font-weight: 600;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: background 0.2s;
+    font-size: var(--text-sm);
+}
+
+.faq-question:hover,
+.faq-question:focus-visible {
+    background: color-mix(in srgb, var(--config-primary) 5%, var(--config-bg-main));
+    outline: none;
+}
+
+.faq-question::after {
+    content: "+";
+    font-size: 1.25rem;
+    color: var(--config-primary);
+    transition: transform 0.2s;
+}
+
+.faq-item.active .faq-question::after {
+    content: "-";
+}
+
+/* Animation container */
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 1000px;
+    /* enough for long answers */
     padding: var(--space-md);
-    flex-wrap: wrap;
 }
 
-.site-title a {
-    color: #fff;
-    font-size: var(--text-xl);
-    font-weight: 700;
-    text-decoration: none;
+/* Padding handling – supports both structures */
+/* If there is an inner wrapper, pad that */
+.faq-answer .faq-answer-inner {
+    padding: var(--space-md);
 }
 
-.site-nav {
-    display: flex;
-    gap: var(--space-md);
-    flex-wrap: wrap;
-    list-style: none;
+/* If no inner wrapper, pad the answer itself */
+.faq-answer {
     padding: 0;
-    margin: 0;
 }
 
-.site-nav a {
-    color: #fff;
-    font-weight: 500;
-    padding: var(--space-xs) var(--space-sm);
-    border-radius: var(--radius-sm);
+/* Fallback for browsers without :has – assume no inner wrapper (most common) */
+@supports not (selector(:has(*))) {
+    .faq-answer {
+        padding: var(--space-md);
+    }
+
+    .faq-answer .faq-answer-inner {
+        padding: 0;
+        /* prevent double padding if inner exists */
+    }
+
+    /* But if inner exists, we need to undo outer padding – tricky, but we rely on modern browsers mostly */
+    /* For maximum compatibility, ensure inner padding always applies */
+    .faq-answer .faq-answer-inner {
+        padding: var(--space-md);
+    }
 }
 
-.site-nav a:hover,
-.site-nav a:focus-visible {
-    background-color: var(--config-primary-dark);
-    text-decoration: none;
+/* Inner content spacing */
+.faq-answer-inner p,
+.faq-answer-inner ul,
+.faq-answer-inner ol,
+.faq-answer p,
+.faq-answer ul,
+.faq-answer ol {
+    margin-bottom: var(--space-sm);
 }
 
-/* Breadcrumbs */
+.faq-answer-inner ul,
+.faq-answer-inner ol,
+.faq-answer ul,
+.faq-answer ol {
+    padding-left: var(--space-lg);
+}
+
+/* Breadcrumb */
 .breadcrumb {
     padding: var(--space-sm) 0;
     font-size: var(--text-sm);
@@ -454,42 +480,11 @@ tr:hover td {
     color: var(--config-primary);
 }
 
-/* Footer */
-.site-footer {
-    background-color: var(--config-secondary);
-    color: #e2e8f0;
-    padding: var(--space-xxl) 0 var(--space-lg);
-    margin-top: auto;
-}
+/* Footer is managed inside components/footer.html; base.css intentionally does
+   not include footer styling so the component's internal styles remain
+   authoritative and isolated. */
 
-.site-footer a {
-    color: #fff;
-    text-decoration: none;
-}
-
-.site-footer a:hover {
-    text-decoration: underline;
-    color: var(--config-primary-light);
-}
-
-.footer-links {
-    display: flex;
-    gap: var(--space-lg);
-    flex-wrap: wrap;
-    list-style: none;
-    padding: 0;
-    margin: var(--space-md) 0;
-}
-
-.footer-copy {
-    margin-top: var(--space-lg);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: var(--space-md);
-    font-size: var(--text-sm);
-    text-align: center;
-}
-
-/* Ad Placement Placeholder */
+/* Ad placeholder */
 .ad-slot {
     background-color: #e2e8f0;
     border: 2px dashed #cbd5e1;
@@ -511,117 +506,81 @@ tr:hover td {
     }
 }
 
-/* Responsive Breakpoints & Overrides */
-/* 1. Mobile (<=320px) */
-@media (max-width: 20rem) {
+/* ========== RESPONSIVE SPACING ADJUSTMENTS ========== */
+/* Tablet */
+@media (max-width: 64rem) {
+
+    /* 1024px */
     :root {
-        --text-base-size: 0.875rem;
-        --space-lg: 1rem;
-    }
-
-    .site-nav {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    #header-container {
-        min-height: 120px;
+        --space-md: 0.5rem;
+        --space-lg: 0.75rem;
+        --space-xl: 0.875rem;
+        --space-xxl: 1.25rem;
     }
 }
 
-/* 2. Mobile (321px - 480px) */
+/* Mobile landscape & small tablets */
+@media (max-width: 48rem) {
+
+    /* 768px */
+    :root {
+        --space-md: 0.5rem;
+        --space-lg: 0.75rem;
+        --space-xl: 0.875rem;
+        --space-xxl: 1rem;
+        --space-sm: 0.375rem;
+    }
+}
+
+/* Mobile portrait */
 @media (max-width: 30rem) {
+
+    /* 480px */
     :root {
-        --text-base-size: 0.9375rem;
-    }
-
-    .site-header .container {
-        flex-direction: column;
-        gap: var(--space-sm);
-    }
-
-    .site-nav {
-        width: 100%;
-        justify-content: center;
-        gap: var(--space-xs);
-        flex-wrap: wrap;
-    }
-
-    .site-nav a {
-        padding: var(--space-xs);
-        font-size: var(--text-sm);
-    }
-
-    .hide-mobile {
-        display: none !important;
-    }
-
-    #header-container {
-        min-height: 100px;
-    }
-
-    #footer-container {
-        min-height: 350px;
+        --space-md: 0.375rem;
+        --space-lg: 0.625rem;
+        --space-xl: 0.75rem;
+        --space-xxl: 0.875rem;
+        --space-sm: 0.3125rem;
+        --space-xs: 0.1875rem;
     }
 }
 
-/* 3. Phablet/Tablet (481px - 768px) */
-@media (min-width: 30.0625rem) and (max-width: 48rem) {
-    .site-header .container {
-        flex-direction: column;
-        gap: var(--space-sm);
-    }
+/* Small mobile */
+@media (max-width: 20rem) {
 
-    .site-nav {
-        width: 100%;
-        justify-content: space-between;
-        gap: var(--space-xs);
-    }
-
-    #header-container {
-        min-height: 96px;
-    }
-
-    #footer-container {
-        min-height: 280px;
-    }
-
-    .hide-mobile {
-        display: none !important;
-    }
-}
-
-/* 4. Desktop (769px - 1024px) */
-@media (min-width: 48.0625rem) {
-    .show-desktop {
-        display: block !important;
-    }
-
-    .ad-slot {
-        min-height: 200px;
-    }
-}
-
-/* 5. Large Desktop (1025px - 1440px) */
-@media (min-width: 64.0625rem) {
-    .ad-slot {
-        min-height: 250px;
-    }
-}
-
-/* 6. Ultra Wide Screens (1441px - 1920px) */
-@media (min-width: 90.0625rem) {
+    /* 320px */
     :root {
-        --text-base-size: 1.125rem;
-        --space-md: 1.25rem;
+        --space-md: 0.375rem;
+        --space-lg: 0.5rem;
+        --space-xl: 0.625rem;
+        --space-xxl: 0.75rem;
+        --space-sm: 0.25rem;
+        --space-xs: 0.125rem;
     }
 }
 
-/* 7. Massive Screens (>=1921px) */
-@media (min-width: 120.0625rem) {
+/* Very small phones ~375px */
+@media (max-width: 23.5rem) {
     :root {
-        --text-base-size: 1.25rem;
-        --container-max: 100rem;
+        --space-xs: 0.1875rem;
+        --space-sm: 0.3125rem;
+        --space-md: 0.5rem;
+        --space-lg: 0.5rem;
+        --space-xl: 0.625rem;
+    }
+
+    .container {
+        padding: 0 var(--space-sm);
+    }
+
+    .card,
+    .content-box {
+        padding: var(--space-md);
+    }
+
+    .faq-question {
+        padding: var(--space-sm);
     }
 }
 
@@ -634,8 +593,6 @@ tr:hover td {
     }
 
     .hide-print,
-    .site-header,
-    .site-footer,
     .ad-slot,
     .breadcrumb {
         display: none !important;
