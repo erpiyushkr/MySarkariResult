@@ -1,5 +1,9 @@
 name: Social Media Notifications
 
+concurrency:
+  group: social-automation
+  cancel-in-progress: false
+
 on:
   push:
     branches: [ main, feature/global-social-automation ]
@@ -53,18 +57,23 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: node scripts/update-rss.js
 
-      - name: Commit generated files (indexes, sitemap, rss)
+      - name: Commit generated files
         if: success() && steps.detect.outputs.has_new == 'true'
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          echo "Staging generated files..."
           git add assets/data/*.json assets/data/social-posts.json sitemap*.xml rss.xml || true
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "chore(automation): update indexes/sitemap/rss for new posts"
-            git push
-          fi
+
+          echo "Committing if changes exist..."
+          git commit -m "chore(automation): update indexes/sitemap/rss for new posts" || echo "No changes to commit"
+
+          echo "Syncing with remote main..."
+          git pull --rebase origin main || echo "Nothing to rebase"
+
+          echo "Pushing changes..."
+          git push origin main || echo "Nothing to push"
 
       - name: Run unified notifier
         if: success() && steps.detect.outputs.has_new == 'true'
