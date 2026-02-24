@@ -43,79 +43,64 @@
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "JobPosting",
-        "title": "Bihar Police Constable Driver Recruitment 2025",
-        "description": "Central Selection Board of Constable recruitment for 4361 Driver positions in Bihar Police.",
-        "datePosted": "2025-07-17",
-        "hiringOrganization": {
-            "@type": "Organization",
-            "name": "Central Selection Board of Constable (CSBC)",
-            "sameAs": "https://mysarkariresult.in/Jobs/bihar-police-constable-driver-recruitment-2025.html"
-        },
-        "jobLocation": {
-            "@type": "Place",
-            "address": {
-                "@type": "PostalAddress",
-                "addressCountry": "IN",
-                "addressRegion": "Bihar"
-            }
-        },
-        "baseSalary": {
-            "@type": "MonetaryAmount",
-            "currency": "INR",
-            "value": {
-                "@type": "QuantitativeValue",
-                "minValue": 21700,
-                "maxValue": 69100,
-                "unitText": "MONTH"
-            }
-        }
-    }
-    </script>
+        <!-- Footer -->
+        <div id="footer-placeholder"></div>
 
-    <!-- Structured Data for News Article -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "NewsArticle",
-        "headline": "Bihar Police Announces 4361 Vacancies for Constable Driver Positions",
-        "datePublished": "2025-07-17T08:30:00+05:30",
-        "dateModified": "2025-07-17T08:30:00+05:30",
-        "author": {
-            "@type": "Person",
-            "name": "Piyush Kumar"
-        },
-        "publisher": {
-            "@type": "Organization",
-            "name": "MySarkariResult",
-            "logo": {
-                "@type": "ImageObject",
-                "url": "https://mysarkariresult.in/assets/images/logo.png"
-            }
-        }
-    }
-    </script>
+        <script src="/assets/js/components-loader.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // FAQ Toggle Functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const faqItem = question.parentElement;
+                    faqItem.classList.toggle('active');
 
-    <!-- Owner Information for Google Sidebar -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "MySarkariResult",
-        "url": "https://mysarkariresult.in/",
-        "potentialAction": {
-            "@type": "SearchAction",
-            "target": "https://mysarkariresult.in/search?q={search_term_string}",
-            "query-input": "required name=search_term_string"
-        },
-        "copyrightHolder": {
-            "@type": "Person",
-            "name": "Piyush Kumar"
-        },
-        "author": {
-            "@type": "Person",
-            "name": "Piyush Kumar"
-        }
+                    // Close other open FAQs
+                    faqQuestions.forEach(q => {
+                        if (q !== question && q.parentElement.classList.contains('active')) {
+                            q.parentElement.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            // Animation on scroll
+            const animateElements = document.querySelectorAll('.animate, .delay-1, .delay-2, .delay-3, .delay-4');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            animateElements.forEach(el => {
+                el.style.opacity = 0;
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+    </script>
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "MySarkariResult",
+    "url": "https://mysarkariresult.in/",
+    "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://mysarkariresult.in/search?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+    },
+    "copyrightHolder": {
+    "@type": "Person",
+    "name": "Piyush Kumar"
+    },
+    "author": {
+    "@type": "Person",
+    "name": "Piyush Kumar"
+    }
     }
     </script>
 

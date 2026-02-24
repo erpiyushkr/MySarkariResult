@@ -92,5 +92,7 @@
 
     // Support custom dynamic content load events used in the site
     document.addEventListener('contentLoaded', initAll);
+    // Also support a targeted headerLoaded event for pages that inject the header after DOMContentLoaded
+    document.addEventListener('headerLoaded', initAll);
 
 })();

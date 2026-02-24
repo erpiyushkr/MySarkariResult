@@ -588,7 +588,7 @@
 
 <body>
     <!-- Header Space -->
-    <div id="header-container"></div>
+    <div id="header-placeholder"></div>
 
     <!-- Main Content -->
     <main class="job-container">
@@ -1105,26 +1105,11 @@
     </main>
 
     <!-- Footer -->
-    <div id="footer-container"></div>
+    <div id="footer-placeholder"></div>
 
+    <script src="/assets/js/components-loader.js"></script>
     <script>
-        // Load Header and Footer
         document.addEventListener('DOMContentLoaded', function () {
-            // Load Header
-            fetch('/components/header.html')
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('header-container').innerHTML = html;
-                    // Mobile menu initialization handled centrally by /assets/js/main.js
-                });
-
-            // Load Footer
-            fetch('/components/footer.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('footer-container').innerHTML = data;
-                });
-
             // FAQ Toggle Functionality
             const faqQuestions = document.querySelectorAll('.faq-question');
             faqQuestions.forEach(question => {
@@ -1160,7 +1145,6 @@
             });
         });
     </script>
-    <script src="/assets/js/main.js"></script>
 
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">

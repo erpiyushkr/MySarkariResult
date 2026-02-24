@@ -706,12 +706,23 @@
                 });
 
             // FAQ Interactions
-            document.querySelectorAll('.faq-section details').forEach(detail => {
-                detail.addEventListener('toggle', function () {
-                    if (this.open) this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        <div id="footer-placeholder"></div>
+        <script src="/assets/js/components-loader.js"></script>
+    <script>
+            // Smooth toggle for details (preserved)
+            document.addEventListener('DOMContentLoaded', function () {
+                document.querySelectorAll('.faq-section details').forEach(detail => {
+                    detail.addEventListener('toggle', function () {
+                        if (this.open) this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    });
                 });
             });
-        });
+    </script>
+    detail.addEventListener('toggle', function () {
+    if (this.open) this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+    });
+    });
     </script>
     <script src="/assets/js/main.js"></script>
 

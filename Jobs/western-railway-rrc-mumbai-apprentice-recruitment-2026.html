@@ -431,19 +431,19 @@
                     <div class="content-box animate">
                         <h2>Important Links</h2>
                         <div class="button-group">
-                            <a href="https://www.rrc-wr.com/Appreg/" class="btn btn-primary" target="_blank"
+                            <a href="https://rrc-wr.com/TradeApp/Login/Index" class="btn btn-primary" target="_blank"
                                 rel="noopener"><i class="fas fa-edit"></i> Apply Online (Registration | Login)</a>
-                            <a href="https://www.rrc-wr.com/Documents/Advt_RRCWR04_25.pdf" class="btn btn-outline"
-                                target="_blank" rel="noopener"><i class="fas fa-file-pdf"></i> Download Notification
+                            <a href="https://doc.sarkariresults.org.in/RRC_WR_Apprentices_2026%20(1).pdf"
+                                class="btn btn-outline" target="_blank" rel="noopener"><i class="fas fa-file-pdf"></i>
+                                Download Notification
                                 (PDF)</a>
-                            <a href="https://www.rrc-wr.com" class="btn btn-secondary" target="_blank" rel="noopener"><i
-                                    class="fas fa-globe"></i> RRC WR Official Website</a>
-                            <a href="https://www.youtube.com/watch?v=example" class="btn btn-outline" target="_blank"
-                                rel="noopener"><i class="fab fa-youtube"></i> How to Fill Form (Video Hindi)</a>
+                            <a href="https://www.rrc-wr.com/" class="btn btn-secondary" target="_blank"
+                                rel="noopener"><i class="fas fa-globe"></i> RRC WR Official Website</a>
+
                         </div>
                         <p class="info-box" style="margin-top:1rem;">📱 Join our <strong>Telegram</strong> |
-                            <strong>WhatsApp</strong> for instant updates: <a href="#">Telegram Channel</a> | <a
-                                href="#">WhatsApp Group</a>
+                            <strong>WhatsApp</strong> for instant updates: <a
+                                href="https://www.whatsapp.com/channel/0029VbBJghW3GJOu2KqtpJ2l">WhatsApp Group</a>
                         </p>
                     </div>
 
@@ -609,34 +609,11 @@
         </div> -->
     </main>
 
-    <div id="footer-container"></div>
+    <div id="footer-placeholder"></div>
 
-    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/components-loader.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // ===== LOAD HEADER =====
-            fetch('../components/header.html')
-                .then(response => {
-                    if (!response.ok) throw new Error('Header fetch failed');
-                    return response.text();
-                })
-                .then(html => {
-                    document.getElementById('header-container').innerHTML = html;
-                    // Mobile menu initialization handled centrally by /assets/js/main.js
-                })
-                .catch(err => console.error('Header load error:', err));
-
-            // ===== LOAD FOOTER =====
-            fetch('../components/footer.html')
-                .then(response => {
-                    if (!response.ok) throw new Error('Footer fetch failed');
-                    return response.text();
-                })
-                .then(data => {
-                    document.getElementById('footer-container').innerHTML = data;
-                })
-                .catch(err => console.error('Footer load error:', err));
-
             // ===== SCROLL ANIMATION =====
             const animateElements = document.querySelectorAll('.animate');
             const observer = new IntersectionObserver((entries) => {

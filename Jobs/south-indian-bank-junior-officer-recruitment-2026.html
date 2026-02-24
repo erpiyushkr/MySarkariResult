@@ -450,9 +450,10 @@
     </main>
 
     <!-- FOOTER -->
-    <div id="footer-container"></div>
+    <div id="footer-placeholder"></div>
 
     <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/components-loader.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Scroll animation for .animate elements (if any)
@@ -466,20 +467,6 @@
             }, { threshold: 0.1 });
             animateElements.forEach(el => observer.observe(el));
         });
-    </script>
-
-    <!-- Fallback for header/footer if components.js is not yet available -->
-    <script>
-        (function loadHeaderFooter() {
-            if (!window.componentsLoaded) {
-                fetch('/components/header.html')
-                    .then(r => r.text())
-                    .then(html => document.getElementById('header-container') ? document.getElementById('header-container').innerHTML = html : null);
-                fetch('/components/footer.html')
-                    .then(r => r.text())
-                    .then(html => document.getElementById('footer-container') ? document.getElementById('footer-container').innerHTML = html : null);
-            }
-        })();
     </script>
 </body>
 
