@@ -2,58 +2,30 @@
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
     <loc>https://mysarkariresult.in/sitemap-jobs.xml</loc>
-<<<<<<< HEAD
-    <lastmod>2026-02-23T07:08:36.239Z</lastmod>
+    <lastmod>2026-02-24T14:37:59.912Z</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://mysarkariresult.in/sitemap-results.xml</loc>
-    <lastmod>2026-02-23T07:08:36.249Z</lastmod>
+    <lastmod>2026-02-24T14:37:59.924Z</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://mysarkariresult.in/sitemap-admit-card.xml</loc>
-    <lastmod>2026-02-23T07:08:36.255Z</lastmod>
+    <lastmod>2026-02-24T14:37:59.931Z</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://mysarkariresult.in/sitemap-answer-key.xml</loc>
-    <lastmod>2026-02-23T07:08:36.260Z</lastmod>
+    <lastmod>2026-02-24T14:37:59.938Z</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://mysarkariresult.in/sitemap-syllabus.xml</loc>
-    <lastmod>2026-02-23T07:08:36.266Z</lastmod>
+    <lastmod>2026-02-24T14:37:59.945Z</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://mysarkariresult.in/sitemap-admission.xml</loc>
-    <lastmod>2026-02-23T07:08:36.269Z</lastmod>
+    <lastmod>2026-02-24T14:37:59.949Z</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://mysarkariresult.in/sitemap-pages.xml</loc>
-    <lastmod>2026-02-23T07:08:36.285Z</lastmod>
-=======
-    <lastmod>2026-02-23T08:01:30.334Z</lastmod>
-  </sitemap>
-  <sitemap>
-    <loc>https://mysarkariresult.in/sitemap-results.xml</loc>
-    <lastmod>2026-02-23T08:01:30.399Z</lastmod>
-  </sitemap>
-  <sitemap>
-    <loc>https://mysarkariresult.in/sitemap-admit-card.xml</loc>
-    <lastmod>2026-02-23T08:01:30.431Z</lastmod>
-  </sitemap>
-  <sitemap>
-    <loc>https://mysarkariresult.in/sitemap-answer-key.xml</loc>
-    <lastmod>2026-02-23T08:01:30.463Z</lastmod>
-  </sitemap>
-  <sitemap>
-    <loc>https://mysarkariresult.in/sitemap-syllabus.xml</loc>
-    <lastmod>2026-02-23T08:01:30.496Z</lastmod>
-  </sitemap>
-  <sitemap>
-    <loc>https://mysarkariresult.in/sitemap-admission.xml</loc>
-    <lastmod>2026-02-23T08:01:30.513Z</lastmod>
-  </sitemap>
-  <sitemap>
-    <loc>https://mysarkariresult.in/sitemap-pages.xml</loc>
-    <lastmod>2026-02-23T08:01:30.607Z</lastmod>
->>>>>>> 92b3881 (fix(site): unify JS initializer, fix mobile menu, update templates and automation pipeline)
+    <lastmod>2026-02-24T14:37:59.967Z</lastmod>
   </sitemap>
 </sitemapindex>
