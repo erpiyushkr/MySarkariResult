@@ -8,12 +8,20 @@ const POSTS_FILE = '/tmp/new-posts.json';
 
 const LINKEDIN_ACCESS_TOKEN = process.env.LINKEDIN_ACCESS_TOKEN;
 const LINKEDIN_ORG_ID = process.env.LINKEDIN_ORG_ID;
+const MARK_LEDGER = (process.env.MARK_LEDGER || 'true') !== 'false';
+const RESULTS_FILE = '/tmp/notify-results-linkedin.json';
+
+console.log('[ENV CHECK][LinkedIn]', {
+    LINKEDIN_ACCESS_TOKEN: !!LINKEDIN_ACCESS_TOKEN,
+    LINKEDIN_ORG_ID: !!LINKEDIN_ORG_ID,
+    MARK_LEDGER: MARK_LEDGER
+});
 
 // Platform-specific send function
 async function sendNotification(message) {
     if (!LINKEDIN_ACCESS_TOKEN || !LINKEDIN_ORG_ID) {
         console.log('[LinkedIn] Skipping: missing secrets');
-        return;
+        return false;
     }
 
     const payload = {
@@ -32,19 +40,26 @@ async function sendNotification(message) {
         },
     };
 
-    const response = await fetch('https://api.linkedin.com/v2/ugcPosts', {
-        method: 'POST',
-        headers: {
-            Authorization: `Bearer ${LINKEDIN_ACCESS_TOKEN}`,
-            'X-Restli-Protocol-Version': '2.0.0',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    });
+    try {
+        const response = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${LINKEDIN_ACCESS_TOKEN}`,
+                'X-Restli-Protocol-Version': '2.0.0',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
 
-    if (!response.ok) {
-        const errBody = await response.text();
-        throw new Error(`[LinkedIn] Failed: ${response.status} ${response.statusText} - ${errBody}`);
+        if (!response.ok) {
+            const errBody = await response.text();
+            console.error(`[LinkedIn] Failed: ${response.status} ${response.statusText} - ${errBody}`);
+            return false;
+        }
+        return true;
+    } catch (e) {
+        console.error('[LinkedIn] Error sending:', e && e.message ? e.message : String(e));
+        return false;
     }
 }
 
@@ -88,9 +103,30 @@ async function sendNotification(message) {
             // 4. Platform-specific sending with try/catch
             try {
                 console.log(`[LinkedIn] Posting: ${url}`);
-                await sendNotification(message);
-                console.log('[LinkedIn] Success');
-                try { ledger.markPosted(url, 'linkedin'); } catch (e) { /* ignore */ }
+                const ok = await sendNotification(message);
+                if (ok) {
+                    console.log('[LinkedIn] Success');
+                    try {
+                        if (MARK_LEDGER) {
+                            ledger.markPosted(url, 'linkedin');
+                        } else {
+                            try {
+                                let arr = [];
+                                if (fs.existsSync(RESULTS_FILE)) {
+                                    arr = JSON.parse(fs.readFileSync(RESULTS_FILE, 'utf8')) || [];
+                                }
+                                if (!arr.includes(url)) {
+                                    arr.push(url);
+                                    fs.writeFileSync(RESULTS_FILE, JSON.stringify(arr, null, 2), 'utf8');
+                                }
+                            } catch (e) {
+                                // ignore
+                            }
+                        }
+                    } catch (e) { /* ignore */ }
+                } else {
+                    console.log('[LinkedIn] Skipped or failed, not marking ledger');
+                }
             } catch (err) {
                 console.error('[LinkedIn] Error:', err && err.message ? err.message : String(err));
             }

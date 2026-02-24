@@ -7,12 +7,21 @@ const ledger = require('./social-ledger');
 const POSTS_FILE = '/tmp/new-posts.json';
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHANNEL_ID = process.env.TELEGRAM_CHANNEL_ID;
+const MARK_LEDGER = (process.env.MARK_LEDGER || 'true') !== 'false';
+const RESULTS_FILE = '/tmp/notify-results-telegram.json';
+
+// Log env presence for debugging (CI visibility)
+console.log('[ENV CHECK][Telegram]', {
+    TELEGRAM_BOT_TOKEN: !!TELEGRAM_BOT_TOKEN,
+    TELEGRAM_CHANNEL_ID: !!TELEGRAM_CHANNEL_ID,
+    MARK_LEDGER: MARK_LEDGER
+});
 
 // Platform-specific send function
 async function sendNotification(message) {
     if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHANNEL_ID) {
         console.log('[Telegram] Skipping: missing secrets');
-        return;
+        return false;
     }
 
     const payload = {
@@ -21,17 +30,24 @@ async function sendNotification(message) {
         disable_web_page_preview: false,
     };
 
-    const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    });
+    try {
+        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
 
-    if (!response.ok) {
-        const errBody = await response.text();
-        throw new Error(`[Telegram] Failed: ${response.status} ${response.statusText} - ${errBody}`);
+        if (!response.ok) {
+            const errBody = await response.text();
+            console.error(`[Telegram] Failed: ${response.status} ${response.statusText} - ${errBody}`);
+            return false;
+        }
+        return true;
+    } catch (e) {
+        console.error('[Telegram] Error sending:', e && e.message ? e.message : String(e));
+        return false;
     }
 }
 
@@ -75,9 +91,31 @@ async function sendNotification(message) {
             // 4. Platform-specific sending with try/catch
             try {
                 console.log(`[Telegram] Posting: ${url}`);
-                await sendNotification(message);
-                console.log('[Telegram] Success');
-                try { ledger.markPosted(url, 'telegram'); } catch (e) { /* ignore */ }
+                const ok = await sendNotification(message);
+                if (ok) {
+                    console.log('[Telegram] Success');
+                    try {
+                        if (MARK_LEDGER) {
+                            ledger.markPosted(url, 'telegram');
+                        } else {
+                            // Record successful URL to a per-platform results file so notify-all can decide
+                            try {
+                                let arr = [];
+                                if (fs.existsSync(RESULTS_FILE)) {
+                                    arr = JSON.parse(fs.readFileSync(RESULTS_FILE, 'utf8')) || [];
+                                }
+                                if (!arr.includes(url)) {
+                                    arr.push(url);
+                                    fs.writeFileSync(RESULTS_FILE, JSON.stringify(arr, null, 2), 'utf8');
+                                }
+                            } catch (e) {
+                                // ignore
+                            }
+                        }
+                    } catch (e) { /* ignore */ }
+                } else {
+                    console.log('[Telegram] Skipped or failed, not marking ledger');
+                }
             } catch (err) {
                 console.error('[Telegram] Error:', err && err.message ? err.message : String(err));
             }

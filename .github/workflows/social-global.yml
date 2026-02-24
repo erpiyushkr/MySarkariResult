@@ -6,7 +6,12 @@ concurrency:
 
 on:
   push:
-    branches: [ main, feature/global-social-automation ]
+    branches:
+      - main
+      - 'feature/**'
+    paths:
+      - '**/*.html'
+      - 'assets/data/*.json'
 
 jobs:
   notify:

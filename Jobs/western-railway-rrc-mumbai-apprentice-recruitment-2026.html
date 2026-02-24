@@ -611,7 +611,7 @@
 
     <div id="footer-container"></div>
 
-    <script src="../components/main.js"></script>
+    <script src="/assets/js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // ===== LOAD HEADER =====
@@ -622,10 +622,7 @@
                 })
                 .then(html => {
                     document.getElementById('header-container').innerHTML = html;
-                    // Initialize mobile menu after header is injected
-                    if (typeof initializeMobileMenu === 'function') {
-                        initializeMobileMenu();
-                    }
+                    // Mobile menu initialization handled centrally by /assets/js/main.js
                 })
                 .catch(err => console.error('Header load error:', err));
 

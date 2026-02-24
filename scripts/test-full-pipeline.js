@@ -10,19 +10,42 @@ const { execSync } = require('child_process');
 
 const POSTS_FILE = '/tmp/new-posts.json';
 
-const sample = [
-    {
-        section: 'Jobs',
-        title: 'Automation System Test',
-        url: 'https://mysarkariresult.in/Jobs/automation-system-test.html',
-        date: new Date().toISOString()
-    }
-];
+// Create a small test post in Jobs/ to simulate a new post
+const ts = new Date().toISOString().replace(/[:.]/g, '-');
+const testPath = `Jobs/test-social-${ts}.html`;
+const testUrl = `https://mysarkariresult.in/${testPath}`;
 
-console.log('[test-full-pipeline] Writing mock new-posts to', POSTS_FILE);
-fs.writeFileSync(POSTS_FILE, JSON.stringify(sample, null, 2), 'utf8');
+if (!fs.existsSync('Jobs')) fs.mkdirSync('Jobs');
+console.log('[test-full-pipeline] Writing test HTML at', testPath);
+fs.writeFileSync(testPath, `<!doctype html><html><head><title>Test ${ts}</title></head><body><h1>Test ${ts}</h1></body></html>`, 'utf8');
 
-const ledger = require('./social/social-ledger');
+try {
+    console.log('[test-full-pipeline] Running detect-new-post.js');
+    execSync('node scripts/social/detect-new-post.js', { stdio: 'inherit' });
+} catch (e) {
+    console.error('[test-full-pipeline] detect-new-post failed (but continuing):', e && e.message ? e.message : String(e));
+}
+
+try {
+    console.log('[test-full-pipeline] Running update-json-index.js');
+    execSync('node scripts/update-json-index.js', { stdio: 'inherit' });
+} catch (e) {
+    console.error('[test-full-pipeline] update-json-index failed (but continuing):', e && e.message ? e.message : String(e));
+}
+
+try {
+    console.log('[test-full-pipeline] Running add-meta-tags.js');
+    execSync('node scripts/add-meta-tags.js', { stdio: 'inherit' });
+} catch (e) {
+    console.error('[test-full-pipeline] add-meta-tags failed (but continuing):', e && e.message ? e.message : String(e));
+}
+
+try {
+    console.log('[test-full-pipeline] Running generate-sitemaps.js');
+    execSync('node scripts/generate-sitemaps.js', { stdio: 'inherit' });
+} catch (e) {
+    console.error('[test-full-pipeline] generate-sitemaps failed (but continuing):', e && e.message ? e.message : String(e));
+}
 
 try {
     console.log('[test-full-pipeline] Running update-rss.js');
@@ -40,6 +63,7 @@ try {
 
 // Inspect ledger after first run
 try {
+    const ledger = require('./social/social-ledger');
     const ledgerData = ledger.loadLedger();
     const count = Array.isArray(ledgerData.posted) ? ledgerData.posted.length : 0;
     console.log(`[test-full-pipeline] Ledger entries after first run: ${count}`);

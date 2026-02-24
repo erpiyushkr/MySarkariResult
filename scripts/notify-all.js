@@ -9,6 +9,7 @@ const path = require('path');
 const { execFile } = require('child_process');
 
 const POSTS_FILE = '/tmp/new-posts.json';
+const ledger = require('./social/social-ledger');
 
 function runScript(scriptPath, env = {}) {
     return new Promise((resolve) => {
@@ -65,15 +66,57 @@ function runScript(scriptPath, env = {}) {
             process.exit(0);
         }
 
-        // Run platform scripts in order
-        const scripts = [
-            './scripts/social/telegram-notify.js',
-            './scripts/social/twitter-notify.js',
-            './scripts/social/linkedin-notify.js'
+        // Run platform scripts in order. We pass MARK_LEDGER=false so per-platform scripts
+        // will write successful URLs to /tmp/notify-results-<platform>.json instead of
+        // marking the ledger directly. notify-all will aggregate results and mark ledger
+        // only when all platforms succeeded for a given URL.
+        const platformMap = [
+            { script: './scripts/social/telegram-notify.js', name: 'telegram', results: '/tmp/notify-results-telegram.json' },
+            { script: './scripts/social/twitter-notify.js', name: 'twitter', results: '/tmp/notify-results-twitter.json' },
+            { script: './scripts/social/linkedin-notify.js', name: 'linkedin', results: '/tmp/notify-results-linkedin.json' }
         ];
 
-        for (const s of scripts) {
-            await runScript(s);
+        for (const p of platformMap) {
+            await runScript(p.script, { MARK_LEDGER: 'false' });
+        }
+
+        // Aggregate results and mark ledger only when every platform succeeded for a URL
+        if (Array.isArray(posts) && posts.length > 0) {
+            // Load per-platform result sets
+            const successSets = {};
+            for (const p of platformMap) {
+                try {
+                    if (fs.existsSync(p.results)) {
+                        const arr = JSON.parse(fs.readFileSync(p.results, 'utf8')) || [];
+                        successSets[p.name] = new Set(arr);
+                    } else {
+                        successSets[p.name] = new Set();
+                    }
+                } catch (e) {
+                    successSets[p.name] = new Set();
+                }
+            }
+
+            for (const post of posts) {
+                const url = post.url || post.link || post;
+                if (!url) continue;
+                // Check all platforms
+                const allSucceeded = platformMap.every(p => successSets[p.name] && successSets[p.name].has(url));
+                if (allSucceeded) {
+                    // Mark ledger per-platform for clarity
+                    for (const p of platformMap) {
+                        try { ledger.markPosted(url, p.name); } catch (e) { /* ignore */ }
+                    }
+                    console.log('[notify-all] Marked ledger for', url);
+                } else {
+                    console.log('[notify-all] Not marking ledger for', url, '- not all platforms succeeded');
+                }
+            }
+
+            // cleanup result files
+            for (const p of platformMap) {
+                try { if (fs.existsSync(p.results)) fs.unlinkSync(p.results); } catch (e) { /* ignore */ }
+            }
         }
 
         console.log('[notify-all] Done');

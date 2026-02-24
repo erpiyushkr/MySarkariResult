@@ -91,7 +91,7 @@ function normalizeDate(input) {
 function updateIndexes() {
     const posts = readTmp();
     if (!posts || posts.length === 0) {
-        console.log('No new posts to update');
+        console.log('[json-index] No new posts to update');
         return;
     }
 
@@ -99,7 +99,7 @@ function updateIndexes() {
         const title = p.title || '';
         const url = p.url || p.link || '';
         if (!url) {
-            console.warn('Skipping post with no URL:', title);
+            console.warn('[json-index] Skipping post with no URL:', title);
             continue;
         }
 
@@ -107,13 +107,13 @@ function updateIndexes() {
         const m = url.match(/https?:\/\/(?:[^\/]+)\/(\w[\w-]*)\//i);
         const section = (m && m[1]) ? m[1] : (p.section || '');
         if (!section) {
-            console.warn('Cannot determine section for', url);
+            console.warn('[json-index] Cannot determine section for', url);
             continue;
         }
 
         const jsonPath = findJsonForSection(section);
         if (!jsonPath) {
-            console.warn('No JSON index found for section', section);
+            console.warn('[json-index] No JSON index found for section', section);
             continue;
         }
 
@@ -129,10 +129,19 @@ function updateIndexes() {
 
         // Normalize link as absolute URL
         const linkAbs = url;
-        // dedupe
-        const exists = arr.some(item => (item.link || item.url || '') === linkAbs);
+        // dedupe: check absolute and relative forms
+        const relForm = linkAbs.replace(/^https?:\/\/(?:[^\/]+)\//i, '');
+        const exists = arr.some(item => {
+            const existing = (item.link || item.url || '');
+            if (!existing) return false;
+            if (existing === linkAbs) return true;
+            if (existing === relForm) return true;
+            // also accept if existing wrapped in site base
+            if (existing.startsWith('http') && existing.endsWith(relForm)) return true;
+            return false;
+        });
         if (exists) {
-            console.log('Skipped (already exists) ->', linkAbs);
+            console.log('[json-index] Skipped duplicate ->', linkAbs);
             continue;
         }
 
@@ -142,9 +151,11 @@ function updateIndexes() {
 
         try {
             fs.writeFileSync(jsonPath, JSON.stringify(arr, null, 2) + '\n', 'utf8');
-            console.log('Updated', path.relative(REPO_ROOT, jsonPath), 'with', linkAbs);
+            console.log('[json-index] Added:', linkAbs);
+            console.log('[json-index] Section:', section);
+            console.log('[json-index] Updated', path.relative(REPO_ROOT, jsonPath));
         } catch (e) {
-            console.error('Failed to write', jsonPath, e && e.message ? e.message : e);
+            console.error('[json-index] Failed to write', jsonPath, e && e.message ? e.message : e);
         }
     }
 }

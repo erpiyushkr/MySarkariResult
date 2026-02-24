@@ -452,23 +452,9 @@
     <!-- FOOTER -->
     <div id="footer-container"></div>
 
-    <script src="../assets/js/components.js"></script>
+    <script src="/assets/js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // FAQ toggle
-            const faqQuestions = document.querySelectorAll('.faq-question');
-            faqQuestions.forEach(question => {
-                question.addEventListener('click', () => {
-                    const faqItem = question.parentElement;
-                    faqItem.classList.toggle('active');
-                    faqQuestions.forEach(q => {
-                        if (q !== question && q.parentElement.classList.contains('active')) {
-                            q.parentElement.classList.remove('active');
-                        }
-                    });
-                });
-            });
-
             // Scroll animation for .animate elements (if any)
             const animateElements = document.querySelectorAll('.animate');
             const observer = new IntersectionObserver((entries) => {

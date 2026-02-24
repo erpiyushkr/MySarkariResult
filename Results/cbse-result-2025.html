@@ -133,9 +133,10 @@
       margin: 0 0.3125rem;
     }
 
-    ul,ol {
-            padding-left: 1.2rem;
-        }
+    ul,
+    ol {
+      padding-left: 1.2rem;
+    }
 
     /* Animations */
     .animate {
@@ -438,8 +439,8 @@
       }
     }
   </style>
-<meta property="og:type" content="article">
-    <meta property="article:published_time" content="2025-05-03">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2025-05-03">
 </head>
 
 <body>
@@ -684,7 +685,7 @@
           document.getElementById('header-container').innerHTML = html;
           // Initialize mobile menu AFTER header loads
           if (typeof initializeMobileMenu === 'function') {
-            initializeMobileMenu();
+            // Mobile menu init handled by /assets/js/main.js
           }
         });
 
@@ -702,7 +703,7 @@
       });
     });
   </script>
-  <script src="../components/main.js"></script>
+  <script src="/assets/js/main.js"></script>
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">

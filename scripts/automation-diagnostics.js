@@ -87,5 +87,47 @@ for (const s of scripts) {
     console.log(`${s}: ${fs.existsSync(path.resolve(s)) ? 'present' : 'MISSING'}`);
 }
 
+// If there are new posts, validate cross-file presence
+if (fs.existsSync(postsFile)) {
+    try {
+        const raw = fs.readFileSync(postsFile, 'utf8');
+        const posts = JSON.parse(raw);
+        if (Array.isArray(posts) && posts.length) {
+            console.log(`[diagnostics] /tmp/new-posts.json contains ${posts.length} entries`);
+            const rssTxt = fs.existsSync(rss) ? fs.readFileSync(rss, 'utf8') : '';
+            const ledgerTxt = fs.existsSync(ledgerPath) ? fs.readFileSync(ledgerPath, 'utf8') : null;
+            let ledgerJson = null;
+            try { if (ledgerTxt) ledgerJson = JSON.parse(ledgerTxt); } catch (e) { ledgerJson = null; }
+
+            for (const p of posts) {
+                const url = p.url || p.link || p.href || '';
+                if (!url) continue;
+                // Check JSON indexes
+                let inJson = false;
+                if (fs.existsSync(dataDir)) {
+                    const files = fs.readdirSync(dataDir).filter(f => f.endsWith('.json'));
+                    for (const f of files) {
+                        try {
+                            const txt = fs.readFileSync(path.join(dataDir, f), 'utf8');
+                            if (txt.includes(url) || txt.includes(url.replace(/^https?:\/\/(?:[^\/]+)\//i, ''))) { inJson = true; break; }
+                        } catch (e) { }
+                    }
+                }
+
+                const inRss = rssTxt && rssTxt.includes(url);
+                const inLedger = ledgerJson && Array.isArray(ledgerJson.posted) && ledgerJson.posted.some(e => e.url === url);
+
+                console.log(`[diagnostics] URL: ${url}`);
+                console.log(` - in JSON indexes: ${inJson ? 'YES' : 'NO'}`);
+                console.log(` - in RSS: ${inRss ? 'YES' : 'NO'}`);
+                console.log(` - in ledger: ${inLedger ? 'YES' : 'NO'}`);
+            }
+        }
+    } catch (e) {
+        console.log('[diagnostics] Failed to parse /tmp/new-posts.json for deeper checks');
+    }
+}
+
 console.log('=== End diagnostics ===');
 process.exit(0);
+

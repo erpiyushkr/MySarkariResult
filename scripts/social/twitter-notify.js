@@ -11,6 +11,14 @@ const apiKey = process.env.TWITTER_API_KEY;
 const apiSecret = process.env.TWITTER_API_SECRET;
 const accessToken = process.env.TWITTER_ACCESS_TOKEN;
 const accessSecret = process.env.TWITTER_ACCESS_SECRET;
+const MARK_LEDGER = (process.env.MARK_LEDGER || 'true') !== 'false';
+const RESULTS_FILE = '/tmp/notify-results-twitter.json';
+
+console.log('[ENV CHECK][Twitter]', {
+    TWITTER_API_KEY: !!apiKey,
+    TWITTER_ACCESS_TOKEN: !!accessToken,
+    MARK_LEDGER: MARK_LEDGER
+});
 
 function percentEncode(str) {
     return encodeURIComponent(str)
@@ -133,7 +141,24 @@ async function postStatus(status) {
                 const res = await postStatus(message);
                 if (res.ok) {
                     console.log('[Twitter] Success');
-                    try { ledger.markPosted(url, 'twitter'); } catch (e) { /* ignore */ }
+                    try {
+                        if (MARK_LEDGER) {
+                            ledger.markPosted(url, 'twitter');
+                        } else {
+                            try {
+                                let arr = [];
+                                if (fs.existsSync(RESULTS_FILE)) {
+                                    arr = JSON.parse(fs.readFileSync(RESULTS_FILE, 'utf8')) || [];
+                                }
+                                if (!arr.includes(url)) {
+                                    arr.push(url);
+                                    fs.writeFileSync(RESULTS_FILE, JSON.stringify(arr, null, 2), 'utf8');
+                                }
+                            } catch (e) {
+                                // ignore
+                            }
+                        }
+                    } catch (e) { /* ignore */ }
                 } else {
                     console.error('[Twitter] Failed:', res.status || '', res.body || res.error || '');
                 }

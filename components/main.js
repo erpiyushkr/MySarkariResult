@@ -1,71 +1,26 @@
-// components/main.js
+// DEPRECATED: components/main.js
+// This file was superseded by /assets/js/main.js. To avoid accidental duplicate
+// initialization and to keep backward compatibility for any stray references,
+// this shim forwards initialization to the canonical script when available.
 
-// Initialize Mobile Menu
-function initializeMobileMenu() {
-    const menuToggle = document.getElementById('msr-unique-toggle');
-    const nav = document.getElementById('msr-unique-nav');
+(function () {
+    'use strict';
+    function warnAndForward() {
+        if (window._msr_components_shim_warned) return;
+        window._msr_components_shim_warned = true;
+        console.warn('Deprecated: components/main.js was replaced by /assets/js/main.js. Loading forwarded initialization if available.');
 
-    if (menuToggle && nav) {
-        // Toggle Menu
-        menuToggle.addEventListener('click', () => {
-            nav.classList.toggle('active');
-            menuToggle.classList.toggle('active');
-            document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
-        });
-
-        // Close Menu on Link Click (Mobile)
-        document.querySelectorAll('#msr-unique-nav a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth <= 768) {
-                    nav.classList.remove('active');
-                    menuToggle.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-            });
-        });
-
-        // Close Menu on Resize (when switching to desktop)
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                nav.classList.remove('active');
-                menuToggle.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-
-        // Scroll handler removed – no dynamic header style changes (prevents layout thrash)
+        if (typeof window.initializeMobileMenu === 'function') {
+            try { window.initializeMobileMenu(); } catch (e) { console.error(e); }
+        }
+        if (typeof window.initializeFAQ === 'function') {
+            try { window.initializeFAQ(); } catch (e) { console.error(e); }
+        }
     }
-}
 
-// FAQ Toggle (ensures smooth interaction)
-function initializeFAQ() {
-    // Prevent double-initialization
-    if (document._msr_faq_initialized) return;
-    document._msr_faq_initialized = true;
-
-    // Use event delegation to avoid multiple listeners and to support dynamic content
-    document.addEventListener('click', (e) => {
-        const question = e.target.closest && e.target.closest('.faq-question');
-        if (!question) return;
-        const faqItem = question.closest('.faq-item');
-        if (!faqItem) return;
-
-        faqItem.classList.toggle('active');
-        // Close other items (accordion behaviour) — keep interface compact
-        document.querySelectorAll('.faq-item').forEach(item => {
-            if (item !== faqItem) item.classList.remove('active');
-        });
-    });
-}
-
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    initializeMobileMenu();
-    initializeFAQ();
-});
-
-// Re-initialize after dynamic content load (if needed)
-document.addEventListener('contentLoaded', () => {
-    initializeMobileMenu();
-    initializeFAQ();
-});
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', warnAndForward);
+    } else {
+        setTimeout(warnAndForward, 0);
+    }
+})();

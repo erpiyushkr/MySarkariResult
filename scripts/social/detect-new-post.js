@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const ledger = require('./social-ledger');
 
 // Configuration
 const REPO_ROOT = path.resolve(__dirname, '../../');
@@ -42,47 +43,52 @@ function extractTitleFromHtml(htmlPath) {
 }
 
 // Get added HTML files from Git
-function getAddedHtmlPosts(contentDirs) {
+function getChangedHtmlPosts(contentDirs) {
     const posts = [];
     try {
         const prevSha = process.env.GITHUB_PREV_SHA || 'HEAD~1';
         const currSha = process.env.GITHUB_CURR_SHA || 'HEAD';
-        
-        let diffCmd = `git diff --name-only --diff-filter=A ${prevSha} ${currSha}`;
-        // Fallback for local testing if HEAD~1 is not available
-        try {
-            execSync(`git log -1 ${prevSha} >/dev/null 2>&1`);
-        } catch {
-            diffCmd = `git diff --name-only --diff-filter=A HEAD`; 
-        }
+
+        let diffCmd = `git diff --name-status --diff-filter=AMR ${prevSha} ${currSha}`;
+        try { execSync(`git log -1 ${prevSha} >/dev/null 2>&1`); } catch { diffCmd = `git diff --name-status --diff-filter=AMR HEAD`; }
 
         const output = execSync(diffCmd).toString();
-        const files = output.split('\n').map(l => l.trim()).filter(Boolean);
+        const lines = output.split('\n').map(l => l.trim()).filter(Boolean);
 
-        for (const file of files) {
+        for (const line of lines) {
+            // name-status format: e.g. 'A\tpath', 'M\tpath', 'R100\told\tnew'
+            const parts = line.split('\t');
+            if (parts.length < 2) continue;
+            const status = parts[0];
+            let file = parts[1];
+            if (status.startsWith('R') && parts.length >= 3) {
+                file = parts[2]; // renamed -> new path
+            }
             if (!file.endsWith('.html')) continue;
 
-            const parts = file.split('/');
-            if (parts.length < 2) continue; // Skip root HTML files like index.html
+            const seg = file.split('/');
+            if (seg.length < 2) continue; // ignore root files
+            const parentFolder = seg[0];
+            if (!contentDirs.includes(parentFolder)) continue;
 
-            const parentFolder = parts[0];
-            if (contentDirs.includes(parentFolder)) {
-                // Determine title
-                const fullPath = path.join(REPO_ROOT, file);
-                const title = extractTitleFromHtml(fullPath);
-                
-                const url = `${BASE_URL}/${file}`;
-                
-                posts.push({
-                    title,
-                    url,
-                    section: parentFolder,
-                    source: 'html'
-                });
+            const fullPath = path.join(REPO_ROOT, file);
+            const title = extractTitleFromHtml(fullPath);
+            const url = `${BASE_URL}/${file}`;
+
+            // Decide inclusion: if not in ledger, include. If in ledger, skip
+            try {
+                if (ledger.isPosted(url)) {
+                    // already posted
+                    continue;
+                }
+            } catch (e) {
+                // ledger read error -> be conservative and include
             }
+
+            posts.push({ title, url, section: parentFolder, source: 'html', path: file, change: status });
         }
     } catch (e) {
-        console.error("Error getting added HTML files via git:", e.message);
+        console.error('Error getting changed HTML files via git:', e && e.message ? e.message : String(e));
     }
     return posts;
 }
@@ -159,7 +165,7 @@ function getNewJsonPosts(contentDirs) {
             }
 
             const fileName = path.basename(relativeFile, '.json');
-            
+
             // Normalize section casing by mapping against contentDirs
             // Fallback to simple titlecase
             let sectionName = fileName.charAt(0).toUpperCase() + fileName.slice(1);
@@ -248,9 +254,9 @@ function processPosts() {
     const contentDirs = getContentDirectories();
     console.log("Found content directories:", contentDirs.join(", "));
 
-    console.log("Checking for HTML additions...");
-    const htmlPosts = getAddedHtmlPosts(contentDirs);
-    console.log(`Found ${htmlPosts.length} new HTML posts.`);
+    console.log("Checking for HTML changes (added/renamed/modified)...");
+    const htmlPosts = getChangedHtmlPosts(contentDirs);
+    console.log(`Found ${htmlPosts.length} candidate HTML posts.`);
 
     console.log("Checking for JSON data additions...");
     const jsonPosts = getNewJsonPosts(contentDirs);
@@ -270,6 +276,37 @@ function processPosts() {
         } else {
             console.log(`Deduplicated HTML post. URL already detected via JSON: ${hp.url}`);
         }
+    }
+
+    // Optionally, detect any HTML files in content directories that exist but are not in ledger.
+    // This is potentially noisy (many historical pages) so we only run it when explicitly requested
+    // by setting SCAN_ALL_UNPOSTED=true or passing --scan to the script.
+    const wantScanAll = (process.env.SCAN_ALL_UNPOSTED === 'true') || process.argv.includes('--scan');
+    if (wantScanAll) {
+        try {
+            for (const dir of contentDirs) {
+                const dirPath = path.join(REPO_ROOT, dir);
+                const files = fs.readdirSync(dirPath).filter(f => f.endsWith('.html'));
+                for (const f of files) {
+                    const rel = `${dir}/${f}`;
+                    const url = `${BASE_URL}/${rel}`;
+                    if (!finalPostsMap.has(url)) {
+                        try {
+                            if (!ledger.isPosted(url)) {
+                                const title = extractTitleFromHtml(path.join(dirPath, f));
+                                finalPostsMap.set(url, { title, url, section: dir, source: 'html', path: rel, change: 'EXISTING' });
+                            }
+                        } catch (e) {
+                            // ignore ledger errors
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+            // ignore filesystem errors
+        }
+    } else {
+        console.log('Skipping full-site scan for un-posted HTML files (set SCAN_ALL_UNPOSTED=true or pass --scan to enable)');
     }
 
     const finalPosts = Array.from(finalPostsMap.values());
