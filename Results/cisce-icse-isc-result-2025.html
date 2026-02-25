@@ -682,49 +682,19 @@
         </div>
     </main>
 
-    <div id="footer-container"></div>
+    <div id="footer-placeholder"></div>
 
+    <script src="/assets/js/components-loader.js"></script>
     <script>
-        // Load Header and Footer
+        // FAQ Interactions (preserved)
         document.addEventListener('DOMContentLoaded', function () {
-            // Load Header
-            fetch('/components/header.html')
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('header-container').innerHTML = html;
-                    // Initialize mobile menu AFTER header loads
-                    if (typeof initializeMobileMenu === 'function') {
-                        // Mobile menu init handled by /assets/js/main.js
-                    }
-                });
-
-            // Load Footer
-            fetch('/components/footer.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('footer-container').innerHTML = data;
-                });
-
-            // FAQ Interactions
-        <div id="footer-placeholder"></div>
-        <script src="/assets/js/components-loader.js"></script>
-    <script>
-            // Smooth toggle for details (preserved)
-            document.addEventListener('DOMContentLoaded', function () {
-                document.querySelectorAll('.faq-section details').forEach(detail => {
-                    detail.addEventListener('toggle', function () {
-                        if (this.open) this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    });
+            document.querySelectorAll('.faq-section details').forEach(detail => {
+                detail.addEventListener('toggle', function () {
+                    if (this.open) this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 });
             });
+        });
     </script>
-    detail.addEventListener('toggle', function () {
-    if (this.open) this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    });
-    });
-    });
-    </script>
-    <script src="/assets/js/main.js"></script>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
