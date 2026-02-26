@@ -2,6 +2,7 @@
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
     <loc>https://mysarkariresult.in/sitemap-jobs.xml</loc>
+<<<<<<< HEAD
     <lastmod>2026-02-26T12:22:43.765Z</lastmod>
   </sitemap>
   <sitemap>
@@ -27,5 +28,32 @@
   <sitemap>
     <loc>https://mysarkariresult.in/sitemap-pages.xml</loc>
     <lastmod>2026-02-26T12:22:43.826Z</lastmod>
+=======
+    <lastmod>2026-02-26T12:25:02.828Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://mysarkariresult.in/sitemap-results.xml</loc>
+    <lastmod>2026-02-26T12:25:02.898Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://mysarkariresult.in/sitemap-admit-card.xml</loc>
+    <lastmod>2026-02-26T12:25:02.932Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://mysarkariresult.in/sitemap-answer-key.xml</loc>
+    <lastmod>2026-02-26T12:25:02.966Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://mysarkariresult.in/sitemap-syllabus.xml</loc>
+    <lastmod>2026-02-26T12:25:03.006Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://mysarkariresult.in/sitemap-admission.xml</loc>
+    <lastmod>2026-02-26T12:25:03.025Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://mysarkariresult.in/sitemap-pages.xml</loc>
+    <lastmod>2026-02-26T12:25:03.134Z</lastmod>
+>>>>>>> 0c9a80d (New post update issue fixed)
   </sitemap>
 </sitemapindex>
