@@ -1,15 +1,18 @@
 try { require('dotenv').config(); } catch (e) { /* dotenv is optional in this runtime */ }
 const fs = require('fs');
+const path = require('path');
 const formatMessage = require('./format-message');
 const ledger = require('./social-ledger');
 const fetch = global.fetch;
 
-const POSTS_FILE = '/tmp/new-posts.json';
+const REPO_ROOT = path.resolve(__dirname, '../../');
+const POSTS_FILE = path.join(REPO_ROOT, 'scripts', 'tmp', 'new-posts.json');
+try { fs.mkdirSync(path.dirname(POSTS_FILE), { recursive: true }); } catch (e) { }
 
 const LINKEDIN_ACCESS_TOKEN = process.env.LINKEDIN_ACCESS_TOKEN;
 const LINKEDIN_ORG_ID = process.env.LINKEDIN_ORG_ID;
 const MARK_LEDGER = (process.env.MARK_LEDGER || 'true') !== 'false';
-const RESULTS_FILE = '/tmp/notify-results-linkedin.json';
+const RESULTS_FILE = path.join(REPO_ROOT, 'scripts', 'tmp', 'notify-results-linkedin.json');
 
 console.log('[ENV CHECK][LinkedIn]', {
     LINKEDIN_ACCESS_TOKEN: !!LINKEDIN_ACCESS_TOKEN,

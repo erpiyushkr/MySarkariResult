@@ -3,8 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const child = require('child_process');
 
-const TMP = '/tmp/new-posts.json';
 const REPO_ROOT = path.resolve(__dirname, '..');
+const TMP = path.join(REPO_ROOT, 'scripts', 'tmp', 'new-posts.json');
+try { fs.mkdirSync(path.dirname(TMP), { recursive: true }); } catch (e) { }
 
 function run(cmd, opts = {}) {
     try {

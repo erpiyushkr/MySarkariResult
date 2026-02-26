@@ -7,7 +7,11 @@
 const fs = require('fs');
 const path = require('path');
 
-const POSTS_FILE = '/tmp/new-posts.json';
+const REPO_ROOT = path.resolve(process.cwd());
+const POSTS_FILE = path.join(REPO_ROOT, 'scripts', 'tmp', 'new-posts.json');
+
+// Ensure tmp dir exists
+try { fs.mkdirSync(path.dirname(POSTS_FILE), { recursive: true }); } catch (e) { }
 const RSS_FILE = path.resolve(process.cwd(), 'rss.xml');
 
 function toRfc822(dateInput) {
@@ -38,7 +42,7 @@ function ensureTemplate() {
         try {
             posts = JSON.parse(fs.readFileSync(POSTS_FILE, 'utf8'));
         } catch (e) {
-            console.error('[update-rss] Invalid JSON in /tmp/new-posts.json');
+            console.error(`[update-rss] Invalid JSON in ${POSTS_FILE}`);
             process.exit(0);
         }
 

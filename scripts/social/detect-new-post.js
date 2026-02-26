@@ -5,7 +5,14 @@ const ledger = require('./social-ledger');
 
 // Configuration
 const REPO_ROOT = path.resolve(__dirname, '../../');
-const TEMP_FILE = '/tmp/new-posts.json';
+const TEMP_FILE = path.join(REPO_ROOT, 'scripts', 'tmp', 'new-posts.json');
+
+// Ensure tmp dir exists for CI portability
+try {
+    fs.mkdirSync(path.dirname(TEMP_FILE), { recursive: true });
+} catch (e) {
+    // ignore
+}
 const BASE_URL = process.env.BASE_URL || 'https://mysarkariresult.in';
 const IGNORED_FOLDERS = ['assets', 'scripts', 'components', 'templates', 'node_modules', '.github', '.git'];
 
@@ -314,7 +321,7 @@ function processPosts() {
 
     if (finalPosts.length > 0) {
         fs.writeFileSync(TEMP_FILE, JSON.stringify(finalPosts, null, 2), 'utf8');
-        console.log(`Wrote details to ${TEMP_FILE}`);
+        console.log(`[detect-new-post] Wrote ${finalPosts.length} post(s) to ${TEMP_FILE}`);
 
         // Write github action output
         const ghOut = process.env.GITHUB_OUTPUT;
@@ -322,6 +329,7 @@ function processPosts() {
             fs.appendFileSync(ghOut, `has_new=true\n`, 'utf8');
         }
     } else {
+        console.log('[detect-new-post] No new posts detected');
         const ghOut = process.env.GITHUB_OUTPUT;
         if (ghOut) {
             fs.appendFileSync(ghOut, `has_new=false\n`, 'utf8');

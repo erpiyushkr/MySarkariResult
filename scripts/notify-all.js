@@ -8,7 +8,9 @@ const fs = require('fs');
 const path = require('path');
 const { execFile } = require('child_process');
 
-const POSTS_FILE = '/tmp/new-posts.json';
+const REPO_ROOT = path.resolve(process.cwd());
+const POSTS_FILE = path.join(REPO_ROOT, 'scripts', 'tmp', 'new-posts.json');
+try { fs.mkdirSync(path.dirname(POSTS_FILE), { recursive: true }); } catch (e) { }
 const ledger = require('./social/social-ledger');
 
 function runScript(scriptPath, env = {}) {
@@ -57,7 +59,7 @@ function runScript(scriptPath, env = {}) {
         try {
             posts = JSON.parse(fs.readFileSync(POSTS_FILE, 'utf8'));
         } catch (e) {
-            console.error('[notify-all] Invalid JSON in /tmp/new-posts.json');
+            console.error(`[notify-all] Invalid JSON in ${POSTS_FILE}`);
             process.exit(0);
         }
 
@@ -71,9 +73,9 @@ function runScript(scriptPath, env = {}) {
         // marking the ledger directly. notify-all will aggregate results and mark ledger
         // only when all platforms succeeded for a given URL.
         const platformMap = [
-            { script: './scripts/social/telegram-notify.js', name: 'telegram', results: '/tmp/notify-results-telegram.json' },
-            { script: './scripts/social/twitter-notify.js', name: 'twitter', results: '/tmp/notify-results-twitter.json' },
-            { script: './scripts/social/linkedin-notify.js', name: 'linkedin', results: '/tmp/notify-results-linkedin.json' }
+            { script: './scripts/social/telegram-notify.js', name: 'telegram', results: path.join(REPO_ROOT, 'scripts', 'tmp', 'notify-results-telegram.json') },
+            { script: './scripts/social/twitter-notify.js', name: 'twitter', results: path.join(REPO_ROOT, 'scripts', 'tmp', 'notify-results-twitter.json') },
+            { script: './scripts/social/linkedin-notify.js', name: 'linkedin', results: path.join(REPO_ROOT, 'scripts', 'tmp', 'notify-results-linkedin.json') }
         ];
 
         for (const p of platformMap) {

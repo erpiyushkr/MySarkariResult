@@ -4,7 +4,14 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const REPO_ROOT = path.resolve(__dirname, '..');
-const TMP_FILE = '/tmp/new-posts.json';
+const TMP_FILE = path.join(REPO_ROOT, 'scripts', 'tmp', 'new-posts.json');
+
+// Ensure tmp dir exists for CI portability
+try {
+    fs.mkdirSync(path.dirname(TMP_FILE), { recursive: true });
+} catch (e) {
+    // ignore
+}
 
 function readTmp() {
     if (!fs.existsSync(TMP_FILE)) return [];
@@ -94,6 +101,7 @@ function updateIndexes() {
         console.log('[json-index] No new posts to update');
         return;
     }
+    console.log(`[json-index] Detected ${posts.length} new post(s)`);
 
     for (const p of posts) {
         const title = p.title || '';

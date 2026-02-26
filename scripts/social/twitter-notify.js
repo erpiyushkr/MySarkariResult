@@ -5,14 +5,16 @@ const fetch = global.fetch;
 const formatMessage = require('./format-message');
 const ledger = require('./social-ledger');
 
-const POSTS_FILE = '/tmp/new-posts.json';
+const REPO_ROOT = path.resolve(__dirname, '../../');
+const POSTS_FILE = path.join(REPO_ROOT, 'scripts', 'tmp', 'new-posts.json');
+try { fs.mkdirSync(path.dirname(POSTS_FILE), { recursive: true }); } catch (e) { }
 
 const apiKey = process.env.TWITTER_API_KEY;
 const apiSecret = process.env.TWITTER_API_SECRET;
 const accessToken = process.env.TWITTER_ACCESS_TOKEN;
 const accessSecret = process.env.TWITTER_ACCESS_SECRET;
 const MARK_LEDGER = (process.env.MARK_LEDGER || 'true') !== 'false';
-const RESULTS_FILE = '/tmp/notify-results-twitter.json';
+const RESULTS_FILE = path.join(REPO_ROOT, 'scripts', 'tmp', 'notify-results-twitter.json');
 
 console.log('[ENV CHECK][Twitter]', {
     TWITTER_API_KEY: !!apiKey,

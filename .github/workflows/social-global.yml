@@ -8,10 +8,19 @@ on:
   push:
     branches:
       - main
-      - 'feature/**'
     paths:
-      - '**/*.html'
+      - 'Jobs/*.html'
+      - 'Results/*.html'
+      - 'Admit-Card/*.html'
+      - 'Answer-Key/*.html'
+      - 'Syllabus/*.html'
+      - 'Admission/*.html'
       - 'assets/data/*.json'
+      - 'scripts/**'
+      - 'components/**'
+      - 'rss.xml'
+      - 'sitemap*.xml'
+  workflow_dispatch:
 
 jobs:
   notify:
@@ -29,7 +38,10 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install social dependencies
         working-directory: scripts/social
         run: npm ci
 
@@ -52,15 +64,15 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: node scripts/add-meta-tags.js
 
-      - name: Update sitemaps
-        if: success() && steps.detect.outputs.has_new == 'true'
-        working-directory: ${{ github.workspace }}
-        run: node scripts/generate-sitemaps.js
-
       - name: Update RSS feed
         if: success() && steps.detect.outputs.has_new == 'true'
         working-directory: ${{ github.workspace }}
         run: node scripts/update-rss.js
+
+      - name: Update sitemaps
+        if: success() && steps.detect.outputs.has_new == 'true'
+        working-directory: ${{ github.workspace }}
+        run: node scripts/generate-sitemaps.js
 
       - name: Commit generated files
         if: success() && steps.detect.outputs.has_new == 'true'

@@ -8,7 +8,10 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const POSTS_FILE = '/tmp/new-posts.json';
+const REPO_ROOT = path.resolve(process.cwd());
+const POSTS_FILE = path.join(REPO_ROOT, 'scripts', 'tmp', 'new-posts.json');
+
+try { fs.mkdirSync(path.dirname(POSTS_FILE), { recursive: true }); } catch (e) { }
 
 // Create a small test post in Jobs/ to simulate a new post
 const ts = new Date().toISOString().replace(/[:.]/g, '-');

@@ -1,14 +1,17 @@
 try { require('dotenv').config(); } catch (e) { /* dotenv is optional in this runtime */ }
 const fs = require('fs');
+const path = require('path');
 const fetch = global.fetch;
 const formatMessage = require('./format-message');
 const ledger = require('./social-ledger');
 
-const POSTS_FILE = '/tmp/new-posts.json';
+const REPO_ROOT = path.resolve(__dirname, '../../');
+const POSTS_FILE = path.join(REPO_ROOT, 'scripts', 'tmp', 'new-posts.json');
+try { fs.mkdirSync(path.dirname(POSTS_FILE), { recursive: true }); } catch (e) { }
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHANNEL_ID = process.env.TELEGRAM_CHANNEL_ID;
 const MARK_LEDGER = (process.env.MARK_LEDGER || 'true') !== 'false';
-const RESULTS_FILE = '/tmp/notify-results-telegram.json';
+const RESULTS_FILE = path.join(REPO_ROOT, 'scripts', 'tmp', 'notify-results-telegram.json');
 
 // Log env presence for debugging (CI visibility)
 console.log('[ENV CHECK][Telegram]', {

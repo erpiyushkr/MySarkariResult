@@ -74,11 +74,11 @@ if (fs.existsSync(ledgerPath)) {
     console.log('social-posts.json: MISSING');
 }
 
-const postsFile = '/tmp/new-posts.json';
-console.log(`/tmp/new-posts.json: ${fs.existsSync(postsFile) ? 'exists' : 'MISSING'}`);
+const postsFile = path.join(process.cwd(), 'scripts', 'tmp', 'new-posts.json');
+console.log(`${postsFile}: ${fs.existsSync(postsFile) ? 'exists' : 'MISSING'}`);
 if (fs.existsSync(postsFile)) {
     const res = checkJsonFile(postsFile);
-    console.log(`/tmp/new-posts.json parse: ${res.ok ? 'OK' : 'INVALID (' + res.error + ')'}`);
+    console.log(`${postsFile} parse: ${res.ok ? 'OK' : 'INVALID (' + res.error + ')'}`);
 }
 
 // check platform scripts present
