@@ -93,7 +93,7 @@ if (fs.existsSync(postsFile)) {
         const raw = fs.readFileSync(postsFile, 'utf8');
         const posts = JSON.parse(raw);
         if (Array.isArray(posts) && posts.length) {
-            console.log(`[diagnostics] /tmp/new-posts.json contains ${posts.length} entries`);
+            console.log(`[diagnostics] ${postsFile} contains ${posts.length} entries`);
             const rssTxt = fs.existsSync(rss) ? fs.readFileSync(rss, 'utf8') : '';
             const ledgerTxt = fs.existsSync(ledgerPath) ? fs.readFileSync(ledgerPath, 'utf8') : null;
             let ledgerJson = null;
@@ -124,7 +124,7 @@ if (fs.existsSync(postsFile)) {
             }
         }
     } catch (e) {
-        console.log('[diagnostics] Failed to parse /tmp/new-posts.json for deeper checks');
+        console.log(`[diagnostics] Failed to parse ${postsFile} for deeper checks`);
     }
 }
 

@@ -1,3 +1,12 @@
 node_modules/
 AUTOMATION_ARCHITECTURE.md
 COPILOT_PROMPT.txt
+
+# Temporary automation files
+scripts/tmp/
+
+# macOS
+.DS_Store
+
+# logs
+*.log

@@ -2,9 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-// Determine base URL from environment or use default
-const BASE_URL = process.env.BASE_URL || 'https://mysarkariresult.in';
-const SECTIONS = ['Jobs', 'Results', 'Admit-Card', 'Answer-Key', 'Syllabus', 'Admission'];
+// Use shared config for sections and base URL
+const { REPO_ROOT, BASE_URL, SECTIONS } = require('./automation-config');
 
 function getFileDate(filePath) {
     try {
@@ -64,25 +63,26 @@ function generateIndexSitemap(sitemaps) {
 
 function main() {
     const sitemaps = [];
-    const rootDir = path.resolve(__dirname, '..');
 
     SECTIONS.forEach(section => {
-        const sectionDir = path.join(rootDir, section);
+        const sectionDir = path.join(REPO_ROOT, section.dir);
         const htmlFiles = findHtmlFiles(sectionDir);
-        
         if (htmlFiles.length === 0) return;
 
+        // Deterministic ordering by relative path
+        htmlFiles.sort((a, b) => path.relative(REPO_ROOT, a).localeCompare(path.relative(REPO_ROOT, b)));
+
         const urls = htmlFiles.map(file => {
-            const relPath = path.relative(rootDir, file).replace(/\\/g, '/');
+            const relPath = path.relative(REPO_ROOT, file).replace(/\\/g, '/');
             const loc = `${BASE_URL}/${relPath}`;
             const lastmod = getFileDate(file);
             return { loc, lastmod };
         });
 
-        const sitemapName = `sitemap-${section.toLowerCase()}.xml`;
-        const sitemapPath = path.join(rootDir, sitemapName);
+        const sitemapName = `sitemap-${section.dir.toLowerCase()}.xml`;
+        const sitemapPath = path.join(REPO_ROOT, sitemapName);
         const sitemapContent = generateSitemapContent(urls);
-        
+
         if (fs.existsSync(sitemapPath)) {
             const existing = fs.readFileSync(sitemapPath, 'utf8');
             if (existing !== sitemapContent) {
@@ -98,28 +98,30 @@ function main() {
         });
     });
 
-    // Add root pages
-    const rootHtmlFiles = fs.readdirSync(rootDir).filter(f => f.endsWith('.html') && f !== 'template.html');
-    const rootUrls = rootHtmlFiles.map(file => {
-        const fullPath = path.join(rootDir, file);
-        return {
-            loc: `${BASE_URL}/${file}`,
-            lastmod: getFileDate(fullPath)
-        };
-    });
+    // Root pages
+    const rootHtmlFiles = fs.readdirSync(REPO_ROOT).filter(f => f.endsWith('.html') && f !== 'template.html').sort();
+    const rootUrls = rootHtmlFiles.map(file => ({ loc: `${BASE_URL}/${file}`, lastmod: getFileDate(path.join(REPO_ROOT, file)) }));
 
     if (rootUrls.length > 0) {
-        const rootSitemapPath = path.join(rootDir, 'sitemap-pages.xml');
-        fs.writeFileSync(rootSitemapPath, generateSitemapContent(rootUrls));
-        sitemaps.push({
-            loc: `${BASE_URL}/sitemap-pages.xml`,
-            lastmod: new Date().toISOString()
-        });
+        const rootSitemapPath = path.join(REPO_ROOT, 'sitemap-pages.xml');
+        const content = generateSitemapContent(rootUrls);
+        if (fs.existsSync(rootSitemapPath)) {
+            const existing = fs.readFileSync(rootSitemapPath, 'utf8');
+            if (existing !== content) fs.writeFileSync(rootSitemapPath, content);
+        } else {
+            fs.writeFileSync(rootSitemapPath, content);
+        }
+        sitemaps.push({ loc: `${BASE_URL}/sitemap-pages.xml`, lastmod: new Date().toISOString() });
     }
 
-    const indexPath = path.join(rootDir, 'sitemap.xml');
+    const indexPath = path.join(REPO_ROOT, 'sitemap.xml');
     const indexContent = generateIndexSitemap(sitemaps);
-    fs.writeFileSync(indexPath, indexContent);
+    if (fs.existsSync(indexPath)) {
+        const existing = fs.readFileSync(indexPath, 'utf8');
+        if (existing !== indexContent) fs.writeFileSync(indexPath, indexContent);
+    } else {
+        fs.writeFileSync(indexPath, indexContent);
+    }
 
     console.log('Sitemaps generated successfully.');
 }
