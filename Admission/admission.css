@@ -1,24 +1,152 @@
-/* admission.css */
+/* admission.css – Premium Admission Section Styles */
+
+/* ===== Admission Header (Soft Gradient Hero) ===== */
+.admission-header {
+    background: linear-gradient(135deg, var(--config-primary) 0%, #4a7db5 100%);
+    color: #fff;
+    padding: clamp(1.5rem, 5vw, 2.5rem) clamp(1rem, 4vw, 2rem);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-xl);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.admission-header::before {
+    content: "";
+    position: absolute;
+    top: -3rem;
+    right: -3rem;
+    width: 15rem;
+    height: 15rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.admission-header::after {
+    content: "";
+    position: absolute;
+    bottom: -2rem;
+    left: -2rem;
+    width: 10rem;
+    height: 10rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.admission-header h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    margin-bottom: var(--space-sm);
+    line-height: 1.2;
+    position: relative;
+    z-index: 2;
+    color: #fff;
+}
+
+.admission-header .short-info {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    opacity: 0.9;
+    max-width: 80%;
+    position: relative;
+    z-index: 2;
+    color: #fff;
+}
+
+/* ===== Section Cards (Enhanced) ===== */
+.content-box {
+    background: var(--config-bg-card);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.2rem, 3vw, 2rem);
+    margin-bottom: var(--space-xl);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.2s ease;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.content-box:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 30px -12px rgba(0, 0, 0, 0.15);
+    background: #ffffff;
+}
+
+.content-box h2 {
+    color: var(--config-primary);
+    font-family: var(--font-heading);
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    margin-bottom: var(--space-lg);
+    position: relative;
+    padding-bottom: var(--space-xs);
+}
+
+.content-box h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 5rem;
+    height: 0.2rem;
+    background: linear-gradient(90deg, var(--config-primary), #ffb6c1);
+    border-radius: 2px;
+}
+
+.content-box h3 {
+    color: var(--config-secondary);
+    font-size: clamp(1.2rem, 2.8vw, 1.6rem);
+    margin: var(--space-lg) 0 var(--space-md);
+}
+
+/* ===== Timeline (Enhanced with Animations) ===== */
 .admission-timeline {
-    border-left: 2px solid var(--config-primary);
-    padding-left: var(--space-md);
+    position: relative;
+    padding-left: 2rem;
     margin: var(--space-xl) 0;
+}
+
+.admission-timeline::before {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--config-primary-light), var(--config-primary));
+    border-radius: 3px;
 }
 
 .timeline-step {
     position: relative;
     margin-bottom: var(--space-lg);
+    padding-left: 1.5rem;
+    transition: transform 0.2s ease;
+}
+
+.timeline-step:hover {
+    transform: translateX(5px);
 }
 
 .timeline-step::before {
     content: "";
     position: absolute;
-    left: calc(var(--space-md) * -1 - 6px);
-    top: 5px;
-    width: 10px;
-    height: 10px;
+    left: -2rem;
+    top: 0.2rem;
+    width: 1rem;
+    height: 1rem;
     background: var(--config-primary);
+    border: 3px solid #fff;
     border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(171, 24, 61, 0.2);
+    transition: all 0.2s ease;
+    z-index: 2;
+}
+
+.timeline-step:hover::before {
+    transform: scale(1.2);
+    background: var(--config-primary-dark);
+    box-shadow: 0 0 0 4px rgba(171, 24, 61, 0.3);
 }
 
 .timeline-date {
@@ -26,11 +154,376 @@
     color: var(--config-text-muted);
     font-size: var(--text-sm);
     margin-bottom: var(--space-xs);
+    letter-spacing: 0.3px;
 }
 
-.admission-info {
-    background: var(--config-bg-main);
-    padding: var(--space-md);
+.timeline-step p {
+    margin: 0;
+    font-weight: 500;
+    color: var(--config-secondary);
+}
+
+/* ===== Highlight Sections (Info, Benefits, Warning) ===== */
+.admission-highlight {
+    background: #fef5f7;
+    padding: var(--space-lg);
+    border-left: 6px solid var(--config-primary);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    margin: var(--space-xl) 0;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+}
+
+.admission-highlight:hover {
+    background: #ffeef2;
+    border-left-width: 8px;
+}
+
+.admission-benefits {
+    background: linear-gradient(145deg, #f0f7ff, #e8f0fe);
+    padding: var(--space-lg);
     border-radius: var(--radius-md);
-    margin-bottom: var(--space-xl);
+    margin: var(--space-xl) 0;
+    border: 1px solid rgba(26, 95, 197, 0.2);
+    box-shadow: var(--shadow-sm);
+}
+
+.admission-warning {
+    background: #fff3e0;
+    padding: var(--space-lg);
+    border-left: 6px solid #f9a825;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    margin: var(--space-xl) 0;
+}
+
+.admission-highlight i,
+.admission-benefits i,
+.admission-warning i {
+    margin-right: var(--space-sm);
+    color: var(--config-primary);
+}
+
+/* ===== Student Guidance Section (Unique Styling) ===== */
+.student-guidance {
+    background: #f8faff;
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    margin: var(--space-xl) 0;
+    border-top: 4px solid var(--config-primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.student-guidance h3 {
+    color: var(--config-secondary);
+    font-size: clamp(1.2rem, 2.8vw, 1.6rem);
+    margin-bottom: var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.student-guidance h3 i {
+    color: var(--config-primary);
+    font-size: 1.4em;
+}
+
+.student-guidance p {
+    margin-bottom: var(--space-md);
+    line-height: 1.8;
+}
+
+/* ===== Table Styling (Exam Pattern) ===== */
+.table-wrapper {
+    overflow-x: auto;
+    margin: var(--space-xl) 0;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    background: var(--config-bg-card);
+}
+
+.responsive-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+    font-size: var(--text-sm);
+}
+
+.responsive-table th {
+    background: linear-gradient(135deg, var(--config-primary), #5a3d5c);
+    color: #fff;
+    font-weight: 600;
+    padding: var(--space-md);
+    text-align: left;
+    font-size: var(--text-md);
+}
+
+.responsive-table td {
+    padding: var(--space-md);
+    border: 1px solid var(--config-border);
+}
+
+.responsive-table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.responsive-table tbody tr:hover {
+    background-color: #f0f5ff;
+    transition: background 0.2s ease;
+}
+
+/* ===== FAQ Styling (Accordion Ready) ===== */
+.faq-section {
+    margin: var(--space-xl) 0;
+}
+
+.faq-item {
+    margin-bottom: var(--space-sm);
+    border: 1px solid #eaeef2;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+
+.faq-item:hover {
+    border-color: var(--config-primary-light);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.faq-question {
+    padding: var(--space-md) var(--space-lg);
+    background: #f9fafc;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s ease;
+    font-size: var(--text-md);
+    color: var(--config-secondary);
+}
+
+.faq-question:hover {
+    background: #f0f3f8;
+}
+
+.faq-question::after {
+    content: "\f067"; /* plus icon */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 0.9rem;
+    color: var(--config-primary);
+    transition: transform 0.3s ease;
+}
+
+.faq-item.active .faq-question::after {
+    content: "\f068"; /* minus icon */
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    background: #fff;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 500px; /* sufficient for answers */
+    padding: var(--space-md) var(--space-lg);
+}
+
+.faq-answer p {
+    margin-bottom: var(--space-sm);
+    line-height: 1.7;
+    color: var(--config-text-main);
+}
+
+/* ===== Info Box (Enhanced) ===== */
+.info-box {
+    background: linear-gradient(145deg, #f9f9fc, #f1f4fa);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    margin: var(--space-lg) 0;
+    border-left: 5px solid var(--config-primary);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+}
+
+.info-box:hover {
+    background: #f4f7ff;
+    border-left-width: 7px;
+}
+
+.info-box h4 {
+    color: var(--config-primary);
+    margin-bottom: var(--space-sm);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.info-box h4 i {
+    font-size: 1.3em;
+}
+
+/* ===== Button Group (Enhanced) ===== */
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin: var(--space-xl) 0;
+}
+
+.button-group .btn {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.button-group .btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 600px) {
+    .button-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .button-group .btn {
+        text-align: center;
+    }
+}
+
+/* ===== Animation Utilities ===== */
+.animate {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s cubic-bezier(0.2, 0.9, 0.3, 1), transform 0.6s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+.animate.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ===== Section Divider (Academic Theme) ===== */
+.section-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--config-primary-light), transparent);
+    margin: var(--space-xxl) 0;
+    width: 100%;
+    opacity: 0.4;
+}
+
+/* ===== Admission Meta (Author/Date) ===== */
+.admission-meta {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    font-size: var(--text-sm);
+    color: var(--config-text-muted);
+    background: var(--config-bg-main);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-full);
+    margin-bottom: var(--space-lg);
+    align-items: center;
+}
+
+.admission-meta span {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+/* ===== Responsive Improvements ===== */
+@media (max-width: 768px) {
+    .admission-header h1 {
+        font-size: 1.8rem;
+    }
+    .admission-header .short-info {
+        max-width: 100%;
+    }
+    .content-box {
+        padding: 1.2rem;
+    }
+    .admission-timeline {
+        padding-left: 1.5rem;
+    }
+    .timeline-step {
+        padding-left: 1rem;
+    }
+    .timeline-step::before {
+        left: -1.8rem;
+        width: 0.8rem;
+        height: 0.8rem;
+    }
+    .student-guidance {
+        padding: var(--space-lg);
+    }
+    .faq-question {
+        font-size: var(--text-sm);
+        padding: var(--space-sm) var(--space-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .admission-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-xs);
+    }
+    .button-group .btn {
+        font-size: 0.9rem;
+    }
+}
+
+/* ===== Extra Polish: Lists inside content-box ===== */
+.content-box ul,
+.content-box ol {
+    margin: var(--space-md) 0 var(--space-md) var(--space-lg);
+    line-height: 1.8;
+}
+
+.content-box li {
+    margin-bottom: var(--space-xs);
+}
+
+.content-box ul ul,
+.content-box ol ol {
+    margin-top: var(--space-xs);
+    margin-bottom: 0;
+}
+
+/* ===== Links in content ===== */
+.content-box a:not(.btn) {
+    color: var(--config-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s;
+}
+
+.content-box a:not(.btn):hover {
+    color: var(--config-primary-dark);
+}
+
+/* ===== Strong and Em ===== */
+.content-box strong {
+    color: var(--config-secondary);
+}
+
+/* ===== Print ===== */
+@media print {
+    .admission-header,
+    .button-group,
+    .admission-meta {
+        background: none;
+        color: black;
+        box-shadow: none;
+    }
+    .content-box {
+        break-inside: avoid;
+        border: 1px solid #ccc;
+    }
 }
